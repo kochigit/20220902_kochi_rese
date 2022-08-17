@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  web:
+    ports: #ポートを公開する(ホスト:コンテナ)
+      # - '8000:80' #8000でアクセスされたら、80を使用する
+      - '8080:8080'
+    build: ./docker/web/ #Dockerfileが存在するディレクトリの相対パス
+    volumes: #コンテナと共有したいパスを指定
+      - ./index.html :/var/www/html/index.html #確認用のhtmlをコンテナ側の/var/wwww/html配下にマウントする
+      - ./logs :/usr/local/apache2/logs/httpd/ # コンテナに入らず、apacheのlogを見るためマウント
+    depends_on: # Service同士の依存関係を指定
+      - ui #`docker-compose run`した際にapacheより前にuiコンテナが実行される
+    links: #他のコンテナに接続する(コンテナのhostsに追加される)
+      - ui
+  ui:
+    build: 
+      context: ./
+      dockerfile: ./docker/ui/Dockerfile
+    volumes:
+        - ./nuxt :/app
+  api:
+    build:
+      context: ./
+      dockerfile: ./docker/api/Dockerfile
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./laravel :/var/www/html
