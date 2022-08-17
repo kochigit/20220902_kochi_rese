@@ -56,3 +56,6 @@
 [Wed Aug 17 17:31:21.513319 2022] [proxy_http:error] [pid 11:tid 139941243779896] [client 192.168.128.1:34240] AH01114: HTTP: failed to make connection to backend: ui, referer: http://localhost:8080/
 [Wed Aug 17 17:33:05.842317 2022] [proxy_http:error] [pid 92:tid 139941243358008] (70007)The timeout specified has expired: [client 192.168.128.1:34258] AH01110: error reading response, referer: http://localhost:8080/
 [Wed Aug 17 17:33:05.842384 2022] [proxy_http:error] [pid 92:tid 139941242067768] (70007)The timeout specified has expired: [client 192.168.128.1:34270] AH01110: error reading response, referer: http://localhost:8080/
+[Wed Aug 17 17:44:47.214139 2022] [proxy_http:error] [pid 9:tid 140042852883256] (70007)The timeout specified has expired: [client 192.168.144.1:34430] AH01110: error reading response, referer: http://localhost:8080/
+[Wed Aug 17 17:44:47.214527 2022] [proxy_http:error] [pid 8:tid 140042852883256] (70007)The timeout specified has expired: [client 192.168.144.1:34450] AH01110: error reading response, referer: http://localhost:8080/
+[Wed Aug 17 17:45:50.246195 2022] [proxy_http:error] [pid 92:tid 140042852879160] (70007)The timeout specified has expired: [client 192.168.144.1:34458] AH01110: error reading response, referer: http://localhost:8080/
