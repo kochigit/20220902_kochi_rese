@@ -1,4 +1,3 @@
-# 2020/03/13 時点での推奨版 12.16.1のnode.js使用
 # 軽量らしいのでOSは、Alpine Linuxを選択
 # https://hub.docker.com/_/node/
 FROM node:16-alpine
