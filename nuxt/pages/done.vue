@@ -10,6 +10,15 @@
   </div>
 </template>
 
+<script>
+export default {
+  middleware: 'checkDirectAccess',
+  created() {
+    console.log(document.referrer);
+  }
+}
+</script>
+
 <style>
 .done {
   height: 50vh;

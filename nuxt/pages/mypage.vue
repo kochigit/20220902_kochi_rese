@@ -1,7 +1,8 @@
 <template>
   <div class="mypage" v-if="reservations || favorites">
-    <transition name="fade">
-      <div class="edit-modal" v-if="isShow">
+
+    <transition name="fade"> 
+      <div class="edit-modal" v-if="isShow" @click.self="toggleEdit()">
         <validation-observer ref="obs" v-slot="ObserverProps" class="edit-validation">
           <table class="my-reservation__table edit-table">
             <div class="table__top">
@@ -67,28 +68,34 @@
               </td>
             </tr>
           </table>
-          <button class="reserve-button" @click="updateReservation" :disabled="ObserverProps.invalid || manualDisabler">
+          <button class="reserve-button update-button" @click="updateReservation" :disabled="ObserverProps.invalid || manualDisabler">
             予約を変更する
           </button>
         </validation-observer>
       </div>
     </transition>
+
     <h2 class="mypage__welcome">いらっしゃいませ、{{ $auth.user.name }}様</h2>
     <div class="myreservation-and-myfavorite">
       <div class="my-reservation">
         <h2 class="my-any__title">予約状況</h2>
-        <table class="my-reservation__table" v-for="(rsv, index) in reservations" :key="index">
+        <table class="my-reservation__table" v-for="(rsv, index) in reservations" :key="index" :class="{visited:!isVisited(rsv.date, rsv.time)}">
           <div class="table__top">
             <div class="reservation-number-wrap">
               <img src="~assets/img/reserved-svgrepo-com.svg" class="reserved-img" />
               <h3 class="reservation-number">予約 {{ index + 1 }}</h3>
+              <p v-if="!isVisited(rsv.date, rsv.time)">：来店済み</p>
             </div>
-            <div class="edit-and-cancel">
+            <div class="edit-and-cancel" v-if="isVisited(rsv.date, rsv.time)">
               <img src="~assets/img/iconmonstr-pencil-8.svg" class="edit pointer" @click="toggleEdit(index + 1, rsv)" />
               <span class="edit--hover">編集する</span>
               <img src="~assets/img/iconmonstr-x-mark-11.svg" class="cancel pointer"
                 @click="cancel(index + 1, rsv.id)" />
               <span class="cancel--hover">キャンセルする</span>
+            </div>
+            <div class="evaluate" v-else>
+              <img src="~assets/img/Comments icon 6.svg" class="comment-img pointer">
+              <span class="comment--hover">口コミを書く</span>
             </div>
           </div>
           <tr>
@@ -107,6 +114,45 @@
             <th>Number</th>
             <td>{{ rsv.number }} 名様</td>
           </tr>
+          <div class="evaluate-box" v-if="!isVisited(rsv.date, rsv.time)">
+            <div class="evaluated" v-if="rsv.evaluation">
+              <div class="graded">
+                <p>評価</p>
+                <span class="star--yellow">★</span>
+                <span :class="(rsv.evaluation.grade>1)? 'star--yellow': null">★</span>
+                <span :class="(rsv.evaluation.grade>2)? 'star--yellow': null">★</span>
+                <span :class="(rsv.evaluation.grade>3)? 'star--yellow': null">★</span>
+                <span :class="(rsv.evaluation.grade>4)? 'star--yellow': null">★</span>
+              </div>
+              <p class="comment-label">コメント</p>
+              <p>{{rsv.evaluation.comment}}</p>
+            </div>
+            <div class="not-evaluated" v-else>
+              <validation-observer ref="obs" v-slot="ObserverProps">
+                <validation-provider rules="required">
+                  <div class="grade">
+                    <input id="star5" type="radio" v-model="grade" value="5">
+                    <label for="star5">★</label>
+                    <input id="star4" type="radio" v-model="grade" value="4">
+                    <label for="star4">★</label>
+                    <input id="star3" type="radio" v-model="grade" value="3">
+                    <label for="star3">★</label>
+                    <input id="star2" type="radio" v-model="grade" value="2">
+                    <label for="star2">★</label>
+                    <input id="star1" type="radio" v-model="grade" value="1">
+                    <label for="star1">★</label>
+                    <p>評価</p>
+                  </div>
+                </validation-provider>
+                <validation-provider v-slot="{errors}" rules="required">
+                  <label for="comment" class="comment-label">コメント</label>
+                  <textarea v-model="comment" id="comment" name="コメント" class="comment" rows="5"></textarea>
+                  <p class="error--orange">{{errors[0]}}</p>
+                </validation-provider>
+                <button @click="evaluate(rsv)" class="evaluate-button" :disabled="ObserverProps.invalid || !ObserverProps.validated">投稿</button>
+              </validation-observer>
+            </div>
+          </div>
         </table>
       </div>
 
@@ -137,6 +183,7 @@
 
 <script>
   export default {
+    middleware: 'auth',
     data() {
       return {
         uuid: this.$auth.user.uuid,
@@ -149,6 +196,9 @@
         time: null,
         number: null,
         today: this.$dayjs().format("YYYY-MM-DD"),
+        now: this.$dayjs().add(+1, 'hours').format('HH:mm'),
+        grade: null,
+        comment: null,
       };
     },
     computed: {
@@ -163,7 +213,7 @@
     methods: {
       async getUserWithReservationsAndFavorites() {
         const gotData = await this.$axios.get(`/v1/user/${this.uuid}`);
-        this.reservations = gotData.data.user.reservations.reverse();
+        this.reservations = gotData.data.user.reservations.sort((a, b) => (a.date > b.date) ? -1 : 1);
         this.favorites = gotData.data.user.favorites.reverse();
       },
       async cancel(num, id) {
@@ -205,6 +255,10 @@
         }
       },
       async updateReservation() {
+        const boo = confirm(`予約を変更してもよろしいですか？`);
+        if (boo==false) {
+          return;
+        }
         let rsvData = {};
         if (this.date) {
           rsvData.date = this.date;
@@ -215,14 +269,34 @@
         if (this.number) {
           rsvData.number = this.number;
         }
-        console.log(rsvData);
         try {
-          const newRsv = await this.$axios.put(`/v1/reservation/${this.currentRsv.id}`, rsvData);
-          console.log(newRsv);
+          const gotData = await this.$axios.put(`/v1/reservation/${this.currentRsv.id}`, rsvData);
+          const rsvIdx = this.reservations.findIndex((rsv) => rsv.id === this.currentRsv.id);
+          const newRsv = gotData.data.newReservation;
+          this.reservations[rsvIdx].date = newRsv.date;
+          this.reservations[rsvIdx].time = newRsv.time;
+          this.reservations[rsvIdx].number = newRsv.number;
+          this.toggleEdit();
         } catch (error) {
-          alert(error)
+          alert(error);
         }
-
+      },
+      isVisited(date, time) {
+        return date > this.today || (date == this.today && time > this.now);
+      },
+      async evaluate(rsv) {
+        const evaluation = {
+          reservation_id: rsv.id,
+          grade: this.grade,
+          comment: this.comment
+        }
+        try {
+          const gotData = await this.$axios.post('/v1/evaluation', evaluation);
+          console.log(gotData.data.evaluation);
+          rsv.evaluation = gotData.data.evaluation;
+        } catch (error) {
+          alert(error);
+        }
       },
     },
     created() {
@@ -288,6 +362,7 @@
 
   .reservation-number {
     font-weight: normal;
+    margin-right: 5px;
   }
 
   .edit {
@@ -295,7 +370,7 @@
     margin-right: 17px;
   }
 
-  .edit--hover {
+  .edit--hover, .cancel--hover, .comment--hover {
     font-size: 12px;
     border: white 1px dashed;
     position: absolute;
@@ -310,26 +385,28 @@
     opacity: 1;
     transition: 0.3s;
   }
-
   .cancel {
     width: 26px;
   }
-
-  .cancel--hover {
-    font-size: 12px;
-    border: white 1px dashed;
-    position: absolute;
-    padding: 3px 5px 3px 6px;
+  .cancel--hover, .comment--hover {
     border-radius: 10px 0 10px 10px;
     transform: translate(-127px, 32px);
-    opacity: 0;
-    transition: 0.3s;
   }
-
   .cancel:hover+.cancel--hover {
     opacity: 1;
     transition: 0.3s;
   }
+  .comment-img {
+    width: 32px;
+  }
+  .comment--hover {
+    transform: translate(-120px, 26px);
+  }
+  .comment-img:hover+.comment--hover {
+    opacity: 1;
+  }
+
+
 
   .my-reservation__table th {
     font-weight: normal;
@@ -386,7 +463,7 @@
     margin-top: 0;
     width: fit-content;
     box-shadow: none;
-    border-radius: 5px 5px 0 0;
+    border-radius: 8px 8px 0 0;
   }
 
   .right-arrow {
@@ -395,14 +472,11 @@
   }
 
   .update-button {
-    display: block;
-    margin: 0 auto;
-    background: #0926ff;
-    width: 100%;
+    border-radius: 0 0 8px 8px;
   }
 
   .edit-validation {
-    border-radius: 5px;
+    border-radius: 8px;
     box-shadow: 0 0 8px white;
   }
 
@@ -416,4 +490,81 @@
     opacity: 0;
   }
 
+  .visited {
+    background: #5c6394;
+  }
+
+.evaluate-box {
+  margin-top: 30px;
+}
+.grade {
+  display: flex;
+  flex-flow: row-reverse;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 15px;
+}
+.grade input[type=radio] {
+  display: none;
+}
+.grade label {
+  font-size: 26px;
+}
+.grade label:first-of-type {
+  margin-right: 3vw;
+}
+.grade label:hover {
+  color: #ffcc00;
+}
+.grade label:hover ~ label {
+  color: #ffcc00;
+}
+.grade input[type=radio]:checked ~ label {
+  color: #ffcc00;
+}
+.grade p {
+  margin-right: 4vw;
+}
+
+.comment-label {
+  display: block;
+  margin-bottom: 7px;
+}
+.comment {
+  width: 100%;
+  resize: none;
+  border-radius: 5px;
+  border: none;
+}
+.evaluate-button {
+  background: #344cff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 18px;
+  font-size: 12px;
+  display: block;
+  margin: 10px 0 0 auto;
+  box-shadow: 1px 1px 3px gray;
+}
+
+
+.graded {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.graded p {
+  margin-right: 3vw;
+}
+.graded span {
+  font-size: 26px;
+}
+.graded span:last-of-type {
+  margin-right: 4vw;
+}
+.star--yellow {
+  color: #ffcc00;
+}
 </style>

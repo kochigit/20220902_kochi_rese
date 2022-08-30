@@ -7,10 +7,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReservationController;
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+use App\Http\Controllers\EvaluationController;
 
 Route::group([
     'middleware' => ['auth:api'],
@@ -29,9 +26,11 @@ Route::group(['prefix' => 'v1'], function() {
         return response()->json(['message' => 'GOOD!'], 200);
     });
     Route::apiResource('restaurant', RestaurantController::class);
+    Route::post('search-restaurant', [RestaurantController::class, 'search']);
     Route::apiResource('user', UserController::class);
     Route::apiResource('favorite', FavoriteController::class)->only(['store','destroy']);
     Route::apiResource('reservation', ReservationController::class)->only(['store', 'update','destroy']);
+    Route::apiResource('evaluation', EvaluationController::class)->only('store');
 });
 
 

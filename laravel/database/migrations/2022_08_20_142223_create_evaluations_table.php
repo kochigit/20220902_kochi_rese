@@ -15,8 +15,7 @@ class CreateEvaluationsTable extends Migration
     {
         Schema::create('evaluations', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('user_uuid')->constrained('users', 'uuid')->cascadeOnDelete();
-            $table->foreignUuid('restaurant_uuid')->constrained('restaurants', 'uuid')->cascadeOnDelete();
+            $table->foreignId('reservation_id')->constrained('reservations')->cascadeOnDelete();
             $table->unsignedTinyInteger('grade');
             $table->text('comment');
             $table->timestamps();

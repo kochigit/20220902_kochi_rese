@@ -41,7 +41,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
-    '@nuxtjs/vuetify',
+    // '@nuxtjs/vuetify',
   ],
 
   auth: {

@@ -23,7 +23,8 @@ class AuthController extends Controller
             "uuid" => (string) Str::uuid(),
             "name" => $request->name,
             "email" => $request->email,
-            "password" => Hash::make($request->password)
+            "password" => Hash::make($request->password),
+            "authority" => "user"
         ]);
 
         return response()->json(['message' => 'User Created Successfully']);

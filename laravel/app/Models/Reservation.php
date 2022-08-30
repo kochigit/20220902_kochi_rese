@@ -17,4 +17,9 @@ class Reservation extends Model
         // belongsToの方が正しい気がするが、belongsToではデータを引っ張ってこれなかった。
     }
 
+    public function evaluation()
+    {
+        return $this->hasOne('App\Models\Evaluation');
+    }
+
 }

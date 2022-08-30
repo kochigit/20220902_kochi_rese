@@ -50,4 +50,20 @@ class RestaurantController extends Controller
     {
         //
     }
+
+    public function search(Request $request) 
+    {
+        $match = [];
+        if ($request->area) {
+            $match[] =['area', '=', $request->area];
+        }
+        if ($request->genre) {
+            $match[] =['genre', '=', $request->genre];
+        }
+        if ($request->word) {
+            $match[] =['name', 'LIKE', "%$request->word%"];
+        }
+        $searchedRestaurants = Restaurant::with('favorites')->where($match)->get();
+        return response()->json(compact('searchedRestaurants'), 200);
+    }
 }
