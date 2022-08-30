@@ -68,4 +68,17 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
+
+    public function admin() {
+        $authority = auth()->user()->authority;
+        if ($authority === 'admin') {
+            return response()->json(compact('authority'), 200);
+        } elseif ($authority === 'manager') {
+            return response()->json(compact('authority'), 200);
+        } else {
+            return response()->json([
+                'message' => 'No Content'
+            ], 204);
+        }
+    }
 }

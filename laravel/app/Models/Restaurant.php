@@ -11,7 +11,11 @@ class Restaurant extends Model
 
     protected $guarded = ['id'];
 
-    protected $hidden = ['id'];
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
+    ];
 
     public function getRouteKeyName()
     {
@@ -28,4 +32,5 @@ class Restaurant extends Model
         return $this->hasMany('App\Models\Reservation', 'restaurant_uuid', 'uuid');
     }
 
+    
 }

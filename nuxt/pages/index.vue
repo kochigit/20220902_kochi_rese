@@ -132,7 +132,6 @@
     },
     created() {
       this.getrestaurants();
-      console.log(this.$auth);
     },
   };
 

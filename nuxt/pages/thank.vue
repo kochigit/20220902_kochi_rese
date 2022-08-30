@@ -8,6 +8,13 @@
 </template>
 
 
+<script>
+export default {
+  middleware: 'checkDirectAccessToThank'
+}
+</script>
+
+
 
 <style>
 .thank {

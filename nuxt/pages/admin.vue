@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  middleware: ['auth','checkAuthority'],
+  middleware: ['checkAuthority'],
   data() {
     return {
       name: null,

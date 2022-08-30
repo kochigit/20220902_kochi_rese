@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  middleware: 'checkDirectAccess',
+  middleware: 'checkDirectAccessToDone',
   created() {
     console.log(document.referrer);
   }

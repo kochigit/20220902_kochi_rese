@@ -99,7 +99,7 @@
 
   .hamburger {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     padding: 30px 0;
     width: fit-content;
   }
@@ -133,6 +133,9 @@
   .welcome {
     font-weight: bold;
     font-size: 15px;
+    width: 26vw;
+    line-height: 1.2;
+    padding-top: 5px;
   }
 
   .slide-menu {

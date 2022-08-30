@@ -22,4 +22,8 @@ class Reservation extends Model
         return $this->hasOne('App\Models\Evaluation');
     }
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }

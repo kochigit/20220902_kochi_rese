@@ -16,4 +16,9 @@ class Favorite extends Model
         return $this->hasOne('App\Models\Restaurant', 'uuid', 'restaurant_uuid');
         // belongsToの方が正しい気がするが、belongsToではデータを引っ張ってこれなかった。
     }
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 }
