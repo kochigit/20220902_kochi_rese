@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  middleware: ['checkAuthority'],
+  middleware: 'checkAuthority',
   data() {
     return {
       name: null,
@@ -77,7 +77,7 @@ export default {
   width: 400px;
 }
 .create-manager__title {
-  background: lightslategray;
+  background: lightseagreen;
   color: white;
   font-size: 18px;
   padding: 18px 20px;
@@ -105,7 +105,7 @@ export default {
   padding: 5px 0;
 }
 .create-manager__button {
-  background: lightslategray;
+  background: lightseagreen;
   color: white;
   border: none;
   border-radius: 5px;

@@ -32,7 +32,7 @@
             <NuxtLink to="/admin">Admin</NuxtLink>
           </li>
           <li class="slide-menu__content" @click="closeMenu" v-if="$auth.user.authority ==='admin' || $auth.user.authority === 'manager'">
-            <NuxtLink to="/manage">Manage</NuxtLink>
+            <NuxtLink to="/manager">Manager</NuxtLink>
           </li>
         </ul>
         <ul class="slide-menu__list" v-else>
@@ -63,7 +63,7 @@
         if (this.$route.path === '/admin') {
           return 'theme--admin';
         }
-        if (this.$route.path === '/manage') {
+        if (this.$route.path === '/manager') {
           return 'theme--manager'
         }
       }
@@ -188,15 +188,15 @@
   } 
 
   .hamburger__logo.theme--admin {
-    background: lightslategray;
+    background: lightseagreen;
     transition: 1s;
   }
   .rese.theme--admin {
-    color: lightslategray;
+    color: lightseagreen;
     transition: 1s;
   }
   .slide-menu__list.theme--admin {
-    color: lightslategray;
+    color: lightseagreen;
     transition: 1s;
   }
 

@@ -1,5 +1,6 @@
 <template>
   <div v-if="restaurants" class="restaurants">
+    
     <div class="search-bar pointer" @change="search">
       <select v-model="area" class="select">
         <option value="" class="option">All area</option>
@@ -30,13 +31,7 @@
           <div class="todetail-and-favorite">
             <NuxtLink :to="'/detail/' + restaurant.uuid" class="to-detail">詳しく見る</NuxtLink>
             <img src="~assets/img/iconmonstr-favorite-3.svg" class="favorite"
-              @click="unlike(restaurant)" v-if="
-                $auth.loggedIn
-                  ? restaurant.favorites.some(
-                      (fav) => fav.user_uuid === $auth.user.uuid
-                    )
-                  : false
-              " />
+              @click="unlike(restaurant)" v-if="$auth.loggedIn? restaurant.favorites.some((fav) => fav.user_uuid === $auth.user.uuid): false" />
             <img src="~assets/img/iconmonstr-favorite-9.svg" class="favorite" @click="like(restaurant)" v-else />
           </div>
         </div>

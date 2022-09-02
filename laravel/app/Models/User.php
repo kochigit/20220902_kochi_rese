@@ -36,6 +36,8 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'remember_token',
         'id',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -71,5 +73,10 @@ class User extends Authenticatable implements JWTSubject
     public function favorites()
     {
         return $this->hasMany('App\Models\Favorite', 'user_uuid', 'uuid');
+    }
+
+    public function managements()
+    {
+        return $this->hasMany('App\Models\Management', 'user_uuid', 'uuid');
     }
 }

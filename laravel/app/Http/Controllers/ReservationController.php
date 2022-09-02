@@ -26,7 +26,7 @@ class ReservationController extends Controller
     public function store(Request $request)
     {
         Reservation::create($request->all());
-        return response()->json(201);
+        return response()->json(null, 201);
     }
 
     /**
@@ -63,6 +63,6 @@ class ReservationController extends Controller
     public function destroy(Reservation $reservation)
     {
         Reservation::where('id', $reservation->id)->delete();
-        return response()->json(200);
+        return response()->json(null, 200);
     }
 }

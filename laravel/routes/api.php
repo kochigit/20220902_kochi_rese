@@ -8,6 +8,7 @@ use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\ManagementController;
 
 Route::group([
     'middleware' => ['auth:api'],
@@ -23,15 +24,23 @@ Route::group([
 
 
 Route::group(['prefix' => 'v1'], function() {
-    Route::get('test', function () {
-        return response()->json(['message' => 'GOOD!'], 200);
-    });
     Route::apiResource('restaurant', RestaurantController::class);
     Route::post('search-restaurant', [RestaurantController::class, 'search']);
     Route::apiResource('user', UserController::class);
     Route::apiResource('favorite', FavoriteController::class)->only(['store','destroy']);
     Route::apiResource('reservation', ReservationController::class)->only(['store', 'update','destroy']);
     Route::apiResource('evaluation', EvaluationController::class)->only('store');
+    
+    Route::group([
+        'prefix' => 'management',
+        'middleware' => 'auth:api'
+    ], function() {
+        Route::get('manager', [ManagementController::class, 'getManager']);
+        Route::get('restaurant', [ManagementController::class, 'getRestaurants']);
+        Route::post('/', [ManagementController::class, 'store']);
+        Route::post('check', [ManagementController::class, 'checkManagement']);
+        Route::get('managedRestaurant/{restaurant}', [ManagementController::class, 'getManagedRestaurant']);
+    });
 });
 
 

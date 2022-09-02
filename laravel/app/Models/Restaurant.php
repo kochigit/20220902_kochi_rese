@@ -32,5 +32,8 @@ class Restaurant extends Model
         return $this->hasMany('App\Models\Reservation', 'restaurant_uuid', 'uuid');
     }
 
-    
+    public function managements()
+    {
+        return $this->hasMany('App\Models\Management', 'restaurant_uuid', 'uuid');
+    }
 }

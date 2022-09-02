@@ -27,16 +27,26 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        User::create([
-            "uuid" => (string) Str::uuid(),
-            "name" => $request->name,
-            "email" => $request->email,
-            'email_verified_at' => date('Y-m-d H:i:s'),
-            "password" => Hash::make($request->password),
-            "authority" => "manager"
-        ]);
+        // nuxt側のadminページに万が一入られた場合でも、managerの作成はadminしかできないようにする。
+        $authority = auth()->user()->authority;
+        if ($authority === 'admin') {
+            User::create([
+                "uuid" => (string) Str::uuid(),
+                "name" => $request->name,
+                "email" => $request->email,
+                'email_verified_at' => date('Y-m-d H:i:s'),
+                "password" => Hash::make($request->password),
+                "authority" => "manager"
+            ]);
+            return response()->json(['message' => 'Manager Created Successfully']);
+        } else {
+            return response()->json([
+                'message' => '不正なアクセスを検知しました'
+            ], 403);
+        }
 
-        return response()->json(['message' => 'Manager Created Successfully']);
+
+        
     }
 
     /**
