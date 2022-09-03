@@ -2,7 +2,7 @@
   <div class="mypage" v-if="reservations || favorites">
 
     <transition name="fade"> 
-      <div class="edit-modal" v-if="isShow" @click.self="toggleEdit()">
+      <div class="edit-modal" v-if="isShow" @click.self="toggleEdit">
         <validation-observer ref="obs" v-slot="ObserverProps" class="edit-validation">
           <table class="my-reservation__table edit-table">
             <div class="table__top">
@@ -272,7 +272,7 @@
         try {
           const gotData = await this.$axios.put(`/v1/reservation/${this.currentRsv.id}`, rsvData);
           const rsvIdx = this.reservations.findIndex((rsv) => rsv.id === this.currentRsv.id);
-          const newRsv = gotData.data.newReservation;
+          const newRsv = gotData.data.reservation;
           this.reservations[rsvIdx].date = newRsv.date;
           this.reservations[rsvIdx].time = newRsv.time;
           this.reservations[rsvIdx].number = newRsv.number;

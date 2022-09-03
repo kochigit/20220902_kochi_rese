@@ -11,9 +11,9 @@ class ManagementController extends Controller
 {
     public function getManager()
     {
-        $authority = auth()->user()->authority;
-        if ($authority === 'manager') {
-            $manager = auth()->user()->load('managements.restaurant:uuid,name,area,genre,img_path');
+        $manager = auth()->user();
+        if ($manager->authority === 'manager') {
+            $manager->load('managements.restaurant:uuid,name,area,genre,img_path');
             return response()->json(compact('manager'), 200);
         } else {
             return response()->json([
@@ -75,10 +75,11 @@ class ManagementController extends Controller
      */
     public function store(Request $request)
     {
-        $authority = auth()->user()->authority;
-        if ($authority === 'manager') {
-            $management = Management::create($request->all());
-            return response()->json(compact('management'), 201);
+        $manager = auth()->user();
+        if ($manager->authority === 'manager') {
+            Management::create($request->all());
+            $manager->load('managements.restaurant:uuid,name,area,genre,img_path');
+            return response()->json(compact('manager'), 201);
         } else {
             return response()->json(403);
         }

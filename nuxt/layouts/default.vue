@@ -6,6 +6,9 @@
 </template>
 
 <style>
+
+
+
 .default {
   background: #eeeeee;
   min-height: 100vh;

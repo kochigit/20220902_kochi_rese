@@ -49,9 +49,8 @@ class ReservationController extends Controller
      */
     public function update(Request $request, Reservation $reservation)
     {
-        Reservation::where('id', $reservation->id,)->update($request->all());
-        $newReservation = Reservation::where('id', $reservation->id)->first();
-        return response()->json(compact('newReservation'), 200);
+        $reservation->update($request->all());
+        return response()->json(compact('reservation'), 200);
     }
 
     /**
@@ -62,7 +61,7 @@ class ReservationController extends Controller
      */
     public function destroy(Reservation $reservation)
     {
-        Reservation::where('id', $reservation->id)->delete();
+        $reservation->delete();
         return response()->json(null, 200);
     }
 }

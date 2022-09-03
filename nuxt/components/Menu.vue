@@ -63,7 +63,7 @@
         if (this.$route.path === '/admin') {
           return 'theme--admin';
         }
-        if (this.$route.path === '/manager') {
+        if (this.$route.path === '/manager' || this.$route.name === 'manage-restaurant_uuid') {
           return 'theme--manager'
         }
       }

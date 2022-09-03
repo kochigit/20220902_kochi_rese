@@ -10,7 +10,7 @@
                 <img src="~assets/img/Registration icon 1.svg" class="name-img">
                 <input type="text" v-model="name" placeholder="Username" name="ユーザーネーム">
               </label></p>
-              <div class="error">{{errors[0]}}</div>
+              <p class="error">{{errors[0]}}</p>
             </validation-provider>
             <validation-provider v-slot="{errors}" rules="required|email|max:191">
               <p><label>
