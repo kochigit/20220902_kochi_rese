@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailVerification;
 
 
 class AuthController extends Controller
@@ -19,13 +21,14 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        User::create([
+        $user = User::create([
             "uuid" => (string) Str::uuid(),
             "name" => $request->name,
             "email" => $request->email,
             "password" => Hash::make($request->password),
             "authority" => "user"
         ]);
+        Mail::to($request->email)->send(new EmailVerification($user));
 
         return response()->json(['message' => 'User Created Successfully']);
     }
