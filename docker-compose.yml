@@ -33,6 +33,7 @@ services:
       - ./laravel :/var/www/html
     depends_on:
       - db
+      - mailhog
     links:
       - db
   db:
@@ -40,7 +41,11 @@ services:
     volumes:
       - db-store:/var/lib/mysql
       - ./logs :/var/log/mysql
-
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
 volumes:
   db-store:
