@@ -22,6 +22,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->string('authority')->nullable();
+            $table->string('salt_for_email')->nullable();
+            $table->timestamp('salt_expiration')->nullable();
             $table->timestamps();
         });
     }

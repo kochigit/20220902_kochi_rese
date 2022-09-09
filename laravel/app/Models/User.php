@@ -38,6 +38,8 @@ class User extends Authenticatable implements JWTSubject
         'id',
         'created_at',
         'updated_at',
+        'salt_for_email',
+        'salt_expiration',
     ];
 
     /**

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerification;
-
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -28,7 +28,6 @@ class AuthController extends Controller
             "password" => Hash::make($request->password),
             "authority" => "user"
         ]);
-        Mail::to($request->email)->send(new EmailVerification($user));
 
         return response()->json(['message' => 'User Created Successfully']);
     }
@@ -72,7 +71,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function admin() {
+    public function admin()
+    {
         $authority = auth()->user()->authority;
         if ($authority === 'admin') {
             return response()->json(compact('authority'), 200);
@@ -82,6 +82,39 @@ class AuthController extends Controller
             return response()->json([
                 'message' => 'No Content'
             ], 204);
+        }
+    }
+
+    public function sendEmailVerification()
+    {
+        $user = auth()->user();
+        User::where('id', $user->id)->update([
+            'salt_for_email' => Str::random(10),
+            'salt_expiration' => Carbon::now()->addHour()
+        ]);
+        $user = User::find($user->id); //user情報が変わったので再取得
+        Mail::to($user->email)->send(new EmailVerification($user));
+        return response()->json(null, 200);
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $user = auth()->user();
+        if ($user->email_verified_at) {
+            return response()->json(['message' => 'already verified'], 203);
+        }
+
+        if (Carbon::now() > $user->salt_expiration) {
+            return response()->json(['message' => 'salt expired'], 204);
+        }
+        $check = Hash::check($user->email.$user->salt_for_email, base64_decode($request->hashedEmail));
+        if ($check) {
+            User::where('id', $user->id)->update([
+                'email_verified_at' => Carbon::now()
+            ]);
+            return response()->json(compact('check'), 200);
+        } else {
+            return response()->json(null, 401);
         }
     }
 }

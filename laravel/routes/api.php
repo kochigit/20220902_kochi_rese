@@ -20,6 +20,8 @@ Route::group([
     Route::post('refresh', [AuthController::class, 'refresh'])->withoutMiddleware(['auth:api']);
     Route::get('user', [AuthController::class, 'me']);
     Route::get('admin', [AuthController::class, 'admin']);
+    Route::get('email-verify', [AuthController::class, 'sendEmailVerification']);
+    Route::post('email-verify', [AuthController::class, 'verifyEmail']);
 });
 
 

@@ -75,7 +75,16 @@
       </div>
     </transition>
 
-    <h2 class="mypage__welcome">いらっしゃいませ、{{ $auth.user.name }}様</h2>
+    <div class="mypage__welcome-wrap">
+      <h2 class="mypage__welcome">いらっしゃいませ、{{ $auth.user.name }}様</h2>
+        <div v-if="!$auth.user.email_verified_at" class="is-email-verified">
+          <span class="unverified">メールアドレス未認証：</span>
+          <button @click="sendEmailVerification">認証メールを送信</button>
+        </div>
+        <div v-else class="is-email-verified">
+          <span class="verified">メールアドレス認証済</span>
+        </div>
+      </div>
     <div class="myreservation-and-myfavorite">
       <div class="my-reservation">
         <h2 class="my-any__title">予約状況</h2>
@@ -298,6 +307,14 @@
           alert(error);
         }
       },
+      async sendEmailVerification() {
+        try {
+          await this.$axios.get('/auth/email-verify');
+          alert('認証メールを送信しました。\n1時間以内に認証を行ってください。');
+        } catch (error) {
+          alert(error);
+        }
+      },
     },
     created() {
       this.getUserWithReservationsAndFavorites();
@@ -308,9 +325,7 @@
 
 <style>
   .mypage__welcome {
-    margin-top: 10px;
     font-size: 20px;
-    margin-bottom: 40px;
   }
 
   .myreservation-and-myfavorite {
@@ -566,5 +581,37 @@
 }
 .star--yellow {
   color: #ffcc00;
+}
+
+.is-email-verified {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+.is-email-verified button {
+  background: #344cff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 18px;
+  font-size: 12px;
+  box-shadow: 1px 1px 3px gray;
+}
+.mypage__welcome-wrap{
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.verified {
+  color: lightseagreen;
+  font-size: 12px;
+  border: lightseagreen 1px solid;
+  padding: 3px 6px;
+  border-radius: 10px;
+}
+.unverified {
+  font-weight: bold;
 }
 </style>
