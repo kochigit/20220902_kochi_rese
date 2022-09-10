@@ -54,7 +54,6 @@ export default {
         await this.$axios.post("auth/register", profile);
         this.$router.push('/thank')
       } catch (err) {
-        console.log(err);
         alert('このメールアドレスは使用済みです。\n詳細：'+err.message);
       }
     },
@@ -67,5 +66,53 @@ export default {
   width: 22px;
   position: relative;
 }
-
+.login-register {
+  height: 50vh;
+}
+.login-register-box {
+  background: white;
+  border-radius: 7px;
+  box-shadow: 2px 2px 7px gray;
+  width: 400px;
+}
+.login-register__title {
+  background: #344cff;
+  color: white;
+  font-size: 18px;
+  padding: 18px 20px;
+  border-radius: 7px 7px 0 0;
+  letter-spacing: 1px;
+}
+.login-register__form {
+  padding: 20px 30px;
+}
+.login-register__form label {
+  display: flex;
+  justify-content: space-between;
+}
+.login-register__form input {
+  border: none;
+  border-bottom: gray 1px solid;
+  font-size: 15px;
+  width: 90%;
+}
+.login-register__form p {
+  padding: 5px 0;
+}
+.login-register__button {
+  background: #344cff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 18px;
+  font-size: 12px;
+  display: block;
+  margin: 10px 0 0 auto;
+  box-shadow: 1px 1px 3px gray;
+}
+.error {
+  color: rgb(255, 77, 77);
+  font-size: 13px;
+  font-weight: bold;
+}
 </style>

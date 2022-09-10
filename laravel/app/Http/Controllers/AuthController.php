@@ -110,9 +110,12 @@ class AuthController extends Controller
         $check = Hash::check($user->email.$user->salt_for_email, base64_decode($request->hashedEmail));
         if ($check) {
             User::where('id', $user->id)->update([
-                'email_verified_at' => Carbon::now()
+                'email_verified_at' => Carbon::now(),
+                'salt_for_email' => null,
+                'salt_expiration' => null
             ]);
-            return response()->json(compact('check'), 200);
+            $user = User::find($user->id);
+            return response()->json(compact('user'), 200);
         } else {
             return response()->json(null, 401);
         }

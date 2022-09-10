@@ -26,7 +26,11 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~plugins/day.js',
-    '~plugins/vee-validate.js'
+    '~plugins/vee-validate.js',
+    '~plugins/vuejs-dialog.js',
+    { src: '~plugins/vue-js-modal.js', mode: 'client' },
+    '~plugins/vue-qrcode.js',
+    '~plugins/vue-qrcode-reader.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

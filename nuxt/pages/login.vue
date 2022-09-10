@@ -48,7 +48,6 @@ export default {
         });
         this.$router.push("/");
       } catch (err) {
-        console.log(err);
         alert('メールアドレスまたはパスワードが間違っているか、ユーザーが存在しないか、サーバーのエラーです。\n詳細：'+err.message);
       }
     },

@@ -1,5 +1,15 @@
 <template>
   <div class="manage" v-if="restaurant">
+
+    <div class="qrReader" v-if="qrActive">
+      <qrcode-stream :paused="paused" @decode="onDecode" @init="onInit" />
+    </div>
+
+    <div class="qrReservation" v-if="qrReservation">
+      {{qrReservation}}
+    </div>
+
+
     <transition name="fade">
       <div class="edit-restaurant-modal" v-if="isShow" @click.self="toggleEdit">
         <div class="edit-restaurant-img">
@@ -73,7 +83,7 @@
       </div>
     </transition>
     <div class="flex--sb">
-      <h2 class="manage__title--restaurant">店舗情報</h2>
+      <h2 class="manage__title--restaurant" @click="qrActive = !qrActive">店舗情報</h2>
       <span class="edit-restaurant pointer" @click="toggleEdit">
         <img src="~assets/img/iconmonstr-pencil-8-black.svg" class="edit pointer"  />
         編集
@@ -122,6 +132,9 @@
         description: null,
         image: null,
         url: null,
+        paused: false,
+        qrActive: false,
+        qrReservation: null,
       }
     },
     methods: {
@@ -184,6 +197,42 @@
         } catch (error) {
           alert(error);
         }
+      },
+    async onInit (promise) {
+        // show loading indicator
+        try {
+          await promise
+          // successfully initialized
+        } catch (error) {
+          if (error.name === 'NotAllowedError') {
+            // user denied camera access permisson
+          } else if (error.name === 'NotFoundError') {
+            // no suitable camera device installed
+          } else if (error.name === 'NotSupportedError') {
+            // page is not served over HTTPS (or localhost)
+          } else if (error.name === 'NotReadableError') {
+            // maybe camera is already in use
+          } else if (error.name === 'OverconstrainedError') {
+            // passed constraints don't match any camera. Did you requested the front camera although there is none?
+          } else {
+            // browser is probably lacking features (WebRTC, Canvas)
+          }
+        } finally {
+          // hide loading indicator
+        }
+      },
+      async onDecode(qrData){
+        this.paused = true;
+        const qrReservation = JSON.parse(qrData);
+        this.qrActive = false;
+        if (qrReservation.restaurant_uuid !== this.restaurant.uuid) {
+          setTimeout(() => {
+            alert('この店舗の予約ではありません。');
+          }, 100);
+          return;
+        }
+        this.qrReservation = qrReservation;
+
       },
     },
     created() {

@@ -162,7 +162,11 @@
               </validation-observer>
             </div>
           </div>
+          <div v-else class="qrcode">
+            <qrcode :value="rsv|toJSON" :options="{width: 150}"/>
+          </div>
         </table>
+        <p v-if="!reservations[0]">予約はありません。</p>
       </div>
 
       <div class="my-favorite">
@@ -185,6 +189,7 @@
             </div>
           </div>
         </div>
+        <p v-if="!favorites[0]">お気に入り店舗はありません。</p>
       </div>
     </div>
   </div>
@@ -218,6 +223,11 @@
           return false;
         }
       },
+    },
+    filters: {
+      toJSON(value) {
+        return JSON.stringify(value);
+      }
     },
     methods: {
       async getUserWithReservationsAndFavorites() {
@@ -613,5 +623,8 @@
 }
 .unverified {
   font-weight: bold;
+}
+.qrcode {
+  color: #344cff;
 }
 </style>
