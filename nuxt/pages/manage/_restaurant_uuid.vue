@@ -1,14 +1,36 @@
 <template>
   <div class="manage" v-if="restaurant">
+    <transition name="fade">
+      <div class="qr-reader" v-if="qrActive" @click.self="qrActive=!qrActive">
+        <div class="camera">
+          <qrcode-stream :paused="paused" @decode="onDecode" @init="onInit"/>
+        </div>
+      </div>
+    </transition>
 
-    <div class="qrReader" v-if="qrActive">
-      <qrcode-stream :paused="paused" @decode="onDecode" @init="onInit" />
-    </div>
-
-    <div class="qrReservation" v-if="qrReservation">
-      {{qrReservation}}
-    </div>
-
+    <transition name="fade">
+      <div class="qrReservation-modal" v-if="qrReservation" @click.self="closeQrModal">
+        <div class="qrReservation reservation-for-manager" :class="qrReservation.visited_at ? 'visited': null">
+          <img src="~assets/img/checkbox-marked-circle-plus-outline.svg" class="check-img pointer" @click="makeReservationVisited(qrReservation.id)" v-if="!qrReservation.visited_at">
+          <span class="check--hover">ご来店済みにする</span>
+          <div class="reservation-info">
+            <p class="reservation-id">予約ID：{{qrReservation.id}}</p>
+            <p>日付：{{$dayjs(qrReservation.date).format('YYYY/MM/DD')}}</p>
+            <p>時刻：{{qrReservation.time.substr(0, 5).replace(":", "：")}}</p>
+            <p>人数：{{qrReservation.number}} 名様</p>
+          </div>
+          <div class="reservation-user">
+            <p v-if="qrReservation.visited_at" class="visited-at">
+            <img src="~assets/img/checkbox-marked-circle.svg" class="visited-img">
+            {{$dayjs(qrReservation.visited_at).format('YYYY/M/D HH:mm')}} ご来店済み
+          </p>
+            <p>お名前：{{qrReservation.user.name}}</p>
+            <p>メール：{{qrReservation.user.email}}</p>
+            <p>ユーザーID：{{qrReservation.user.uuid}}</p>
+          </div>
+        </div>
+      </div>
+    </transition>
 
     <transition name="fade">
       <div class="edit-restaurant-modal" v-if="isShow" @click.self="toggleEdit">
@@ -83,9 +105,9 @@
       </div>
     </transition>
     <div class="flex--sb">
-      <h2 class="manage__title--restaurant" @click="qrActive = !qrActive">店舗情報</h2>
+      <h2 class="manage__title">店舗情報</h2>
       <span class="edit-restaurant pointer" @click="toggleEdit">
-        <img src="~assets/img/iconmonstr-pencil-8-black.svg" class="edit pointer"  />
+        <img src="~assets/img/iconmonstr-pencil-8-black.svg" class="edit-img pointer"  />
         編集
       </span>
     </div>
@@ -100,20 +122,31 @@
       </div>
     </div>
     <div class="reservations">
-      <h2 class="manage__title--reservation">予約一覧</h2>
-      <div class="reservation-for-manager" v-for="reservation in restaurant.reservations" :key="reservation.id">
-        <div class="">
+      <div class="flex--sb">
+        <h2 class="manage__title">予約一覧</h2>
+        <span class="scan pointer" @click="qrActive = !qrActive">
+          <img src="~assets/img/qrcode-scan.svg" class="scan-img">
+          QR
+        </span>
+      </div>
+      <div class="reservation-for-manager" v-for="reservation in restaurant.reservations.sort((a, b) => (a.time < b.time) ? -1 : 1).sort((a, b) => (a.date < b.date) ? -1 : 1)" :key="reservation.id" :class="reservation.visited_at ? 'visited': null">
+        <img src="~assets/img/checkbox-marked-circle-plus-outline.svg" class="check-img pointer" @click="makeReservationVisited(reservation.id)" v-if="!reservation.visited_at">
+        <span class="check--hover">手動でご来店済みにする</span>
+        <div class="reservation-info">
           <p class="reservation-id">予約ID：{{reservation.id}}</p>
           <p>日付：{{$dayjs(reservation.date).format('YYYY/MM/DD')}}</p>
           <p>時刻：{{reservation.time.substr(0, 5).replace(":", "：")}}</p>
           <p>人数：{{reservation.number}} 名様</p>
         </div>
-        <div class="">
+        <div class="reservation-user">
+          <p v-if="reservation.visited_at" class="visited-at">
+            <img src="~assets/img/checkbox-marked-circle.svg" class="visited-img">
+            {{$dayjs(reservation.visited_at).format('YYYY/M/D HH:mm')}} ご来店済み
+          </p>
           <p>お名前：{{reservation.user.name}}</p>
           <p>メール：{{reservation.user.email}}</p>
           <p>ユーザーID：{{reservation.user.uuid}}</p>
         </div>
-        <span></span>
       </div>
     </div>
   </div>
@@ -198,7 +231,7 @@
           alert(error);
         }
       },
-    async onInit (promise) {
+      async onInit (promise) {
         // show loading indicator
         try {
           await promise
@@ -221,7 +254,7 @@
           // hide loading indicator
         }
       },
-      async onDecode(qrData){
+      onDecode(qrData){
         this.paused = true;
         const qrReservation = JSON.parse(qrData);
         this.qrActive = false;
@@ -231,8 +264,28 @@
           }, 100);
           return;
         }
-        this.qrReservation = qrReservation;
-
+        this.qrReservation = this.restaurant.reservations.find(rsv => rsv.id === qrReservation.id);
+      },
+      closeQrModal() {
+        if (this.qrReservation.visited_at) {
+          this.qrReservation = null;
+          return;
+        }
+        const boo = confirm('この予約を来店済みにせずにこのウィンドウを閉じますか？\n※ 原則来店済みにしてください。');
+        if (boo) {
+          this.qrReservation = null;
+        }
+      },
+      async makeReservationVisited(id) {
+        try {
+          const response = await this.$axios.put(`/v1/reservation/${id}`, {
+            visited_at: this.$dayjs().format('YYYY-MM-DD HH:mm:ss')
+          });
+          const index = this.restaurant.reservations.findIndex((rsv) => rsv.id === id);
+          this.restaurant.reservations[index].visited_at = response.data.reservation.visited_at;
+        } catch (error) {
+          alert(`エラーが発生しました。サーバー管理者にお問い合わせください。\n${error}`)
+        }
       },
     },
     created() {
@@ -249,15 +302,11 @@
   align-items: center;
   margin-bottom: 10px;
 }
-.manage__title--restaurant {
+.manage__title {
   font-size: 18px;
 }
 .edit-restaurant {
   color: gray;
-}
-.manage__title--reservation {
-  font-size: 18px;
-  margin-bottom: 10px;
 }
 .managed-restaurant {
   display: flex;
@@ -286,10 +335,11 @@
   align-items: flex-end;
   background: rgb(255, 113, 62);
   color: white;
-  padding: 10px;
+  padding: 10px 20px;
   border-radius: 5px;
   margin-bottom: 10px;
   box-shadow: 2px 2px 5px rgb(177, 177, 177);
+  position: relative;
 }
 .reservation-for-manager p {
   padding: 5px 0;
@@ -298,6 +348,7 @@
   text-decoration-line: underline;
   text-underline-offset: 2px;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .edit-restaurant-modal {
@@ -350,7 +401,7 @@
   width: 90%;
   background: rgba(0, 0, 0, 0.8);
   border-radius: 5px;
-  padding: 15px 20px;
+  padding: 15px 20px 20px;
   box-shadow: 0 0 7px gainsboro;
 }
 .edit-restaurant-info th {
@@ -407,7 +458,6 @@
   display: none;
 }
 
-
 .preview {
   width: 40%;
 }
@@ -416,5 +466,86 @@
 }
 .no-preview {
   width: 40%;
+}
+
+.qrReservation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+.qrReservation {
+  background: coral;
+  width: 90%;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 8px gainsboro;
+  position: relative;
+}
+.check-img {
+  width: 30px;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+}
+.check--hover {
+  font-size: 12px;
+  border: white 1px dashed;
+  position: absolute;
+  padding: 3px 5px 3px 6px;
+  border-radius: 10px 10px 0 10px;
+  top: 0;
+  right: 0;
+  transform: translate(-53px, 3px);
+  opacity: 0;
+  transition: 0.3s;
+}
+.check-img:hover+.check--hover {
+  opacity: 1;
+  transition: 0.3s;
+}
+
+.visited-img, .scan-img {
+  width: 26px;
+}
+.reservation-for-manager.visited {
+  background: rgb(24, 158, 151);
+}
+.visited-at {
+  text-align: right;
+  line-height: 23px;
+}
+.reservation-info {
+  width: 30%;
+}
+.reservation-user {
+  width: 70%;
+}
+.scan {
+  color: gray;
+  line-height: 23px;
+}
+.qr-reader {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.9);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.camera {
+  width: 70%;
 }
 </style>

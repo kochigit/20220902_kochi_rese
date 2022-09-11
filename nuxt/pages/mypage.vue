@@ -1,6 +1,5 @@
 <template>
   <div class="mypage" v-if="reservations || favorites">
-
     <transition name="fade"> 
       <div class="edit-modal" v-if="isShow" @click.self="toggleEdit">
         <validation-observer ref="obs" v-slot="ObserverProps" class="edit-validation">
@@ -87,24 +86,20 @@
       </div>
     <div class="myreservation-and-myfavorite">
       <div class="my-reservation">
+
         <h2 class="my-any__title">予約状況</h2>
-        <table class="my-reservation__table" v-for="(rsv, index) in reservations" :key="index" :class="{visited:!isVisited(rsv.date, rsv.time)}">
+        <table class="my-reservation__table" v-for="(rsv, index) in reservations" :key="index">
           <div class="table__top">
             <div class="reservation-number-wrap">
               <img src="~assets/img/reserved-svgrepo-com.svg" class="reserved-img" />
               <h3 class="reservation-number">予約 {{ index + 1 }}</h3>
-              <p v-if="!isVisited(rsv.date, rsv.time)">：来店済み</p>
             </div>
-            <div class="edit-and-cancel" v-if="isVisited(rsv.date, rsv.time)">
+            <div class="edit-and-cancel">
               <img src="~assets/img/iconmonstr-pencil-8.svg" class="edit pointer" @click="toggleEdit(index + 1, rsv)" />
               <span class="edit--hover">編集する</span>
               <img src="~assets/img/iconmonstr-x-mark-11.svg" class="cancel pointer"
                 @click="cancel(index + 1, rsv.id)" />
               <span class="cancel--hover">キャンセルする</span>
-            </div>
-            <div class="evaluate" v-else>
-              <img src="~assets/img/Comments icon 6.svg" class="comment-img pointer">
-              <span class="comment--hover">口コミを書く</span>
             </div>
           </div>
           <tr>
@@ -123,7 +118,40 @@
             <th>Number</th>
             <td>{{ rsv.number }} 名様</td>
           </tr>
-          <div class="evaluate-box" v-if="!isVisited(rsv.date, rsv.time)">
+          <button class="activate-qr" @click="qrActive = !qrActive">
+            QRコード表示切り替え
+          </button>
+          <div class="qrcode" v-show="qrActive">
+            <qrcode :value="rsv|toJSON" :options="{width: 180}"/>
+          </div>
+        </table>
+        <p v-if="!reservations[0]">予約はありません。</p>
+
+        <h2 class="my-any__title visited">ご来店済みの予約</h2>
+        <table class="my-reservation__table visited" v-for="rsv in visitedReservations" :key="rsv.id">
+          <div class="table__top">
+            <h3 class="visited">
+              <img src="~assets/img/checkbox-marked-circle.svg" class="visited-img">
+              ご来店済み
+            </h3>
+          </div>
+          <tr>
+            <th>Restaurant</th>
+            <td>{{ rsv.restaurant.name }}</td>
+          </tr>
+          <tr>
+            <th>Date</th>
+            <td>{{ $dayjs(rsv.date).format("YYYY年 M月 D日 (dd)") }}</td>
+          </tr>
+          <tr>
+            <th>Time</th>
+            <td>{{ rsv.time.substr(0, 5).replace(":", "：") }}</td>
+          </tr>
+          <tr>
+            <th>Number</th>
+            <td>{{ rsv.number }} 名様</td>
+          </tr>
+          <div class="evaluate-box">
             <div class="evaluated" v-if="rsv.evaluation">
               <div class="graded">
                 <p>評価</p>
@@ -162,11 +190,8 @@
               </validation-observer>
             </div>
           </div>
-          <div v-else class="qrcode">
-            <qrcode :value="rsv|toJSON" :options="{width: 150}"/>
-          </div>
         </table>
-        <p v-if="!reservations[0]">予約はありません。</p>
+        <p v-if="!visitedReservations[0]">ご来店済みの予約はありません。</p>
       </div>
 
       <div class="my-favorite">
@@ -202,6 +227,7 @@
       return {
         uuid: this.$auth.user.uuid,
         reservations: null,
+        visitedReservations: null,
         favorites: null,
         isShow: false,
         rIndex: null,
@@ -213,6 +239,7 @@
         now: this.$dayjs().add(+1, 'hours').format('HH:mm'),
         grade: null,
         comment: null,
+        qrActive: false,
       };
     },
     computed: {
@@ -226,13 +253,19 @@
     },
     filters: {
       toJSON(value) {
-        return JSON.stringify(value);
+        const qr = {
+          id: value.id,
+          restaurant_uuid: value.restaurant_uuid
+        };
+        // 不要な情報を削いでセキュリティを高め、かつ情報が少ない方がQRが単純になり読み取りやすくなる。
+        return JSON.stringify(qr);
       }
     },
     methods: {
       async getUserWithReservationsAndFavorites() {
         const gotData = await this.$axios.get(`/v1/user/${this.uuid}`);
-        this.reservations = gotData.data.user.reservations.sort((a, b) => (a.date > b.date) ? -1 : 1);
+        this.reservations = gotData.data.user.reservations.filter(rsv => rsv.visited_at == null).sort((a, b) => (a.date < b.date) ? -1 : 1);
+        this.visitedReservations = gotData.data.user.reservations.filter(rsv => rsv.visited_at !== null).sort((a, b) => (a.date > b.date) ? -1 : 1);
         this.favorites = gotData.data.user.favorites.reverse();
       },
       async cancel(num, id) {
@@ -515,7 +548,7 @@
     opacity: 0;
   }
 
-  .visited {
+  .my-reservation__table.visited {
     background: #5c6394;
   }
 
@@ -573,7 +606,6 @@
   box-shadow: 1px 1px 3px gray;
 }
 
-
 .graded {
   margin-bottom: 15px;
   display: flex;
@@ -625,6 +657,26 @@
   font-weight: bold;
 }
 .qrcode {
-  color: #344cff;
+  text-align: center;
+}
+.visited-img {
+  width: 26px;
+}
+h3.visited {
+  line-height: 23px;
+  font-weight: normal;
+}
+.my-any__title.visited {
+  margin-top: 60px;
+}
+.activate-qr {
+  display: block;
+  margin: 20px auto;
+  border: gainsboro 1px solid;
+  border-radius: 5px;
+  padding: 5px 10px;
+  background: lightseagreen;
+  color: inherit;
+  box-shadow: 0 0 4px lightgray;
 }
 </style>

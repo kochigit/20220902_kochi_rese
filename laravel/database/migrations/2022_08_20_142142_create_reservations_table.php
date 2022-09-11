@@ -20,6 +20,7 @@ class CreateReservationsTable extends Migration
             $table->date('date');
             $table->time('time');
             $table->unsignedSmallInteger('number');
+            $table->timestamp('visited_at')->nullable();
             $table->timestamps();
         });
     }
