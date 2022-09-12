@@ -129,7 +129,7 @@
           QR
         </span>
       </div>
-      <div class="reservation-for-manager" v-for="reservation in restaurant.reservations.sort((a, b) => (a.time < b.time) ? -1 : 1).sort((a, b) => (a.date < b.date) ? -1 : 1)" :key="reservation.id" :class="reservation.visited_at ? 'visited': null">
+      <div class="reservation-for-manager" v-for="reservation in reservations" :key="reservation.id" :class="reservation.visited_at ? 'visited': null">
         <img src="~assets/img/checkbox-marked-circle-plus-outline.svg" class="check-img pointer" @click="makeReservationVisited(reservation.id)" v-if="!reservation.visited_at">
         <span class="check--hover">手動でご来店済みにする</span>
         <div class="reservation-info">
@@ -158,6 +158,7 @@
     data() {
       return {
         restaurant: null,
+        reservations: null,
         isShow: false,
         name: null,
         area: null,
@@ -174,6 +175,7 @@
       async getManagedRestaurant() {
         const gotData = await this.$axios.get(`/v1/management/managedRestaurant/${this.$route.params.restaurant_uuid}`);
         this.restaurant = gotData.data.restaurant;
+        this.reservations = gotData.data.restaurant.reservations.sort((a, b) => (a.time < b.time) ? -1 : 1).sort((a, b) => (a.date < b.date) ? -1 : 1);
       },
       toggleEdit() {
         this.isShow = !this.isShow;
@@ -264,7 +266,7 @@
           }, 100);
           return;
         }
-        this.qrReservation = this.restaurant.reservations.find(rsv => rsv.id === qrReservation.id);
+        this.qrReservation = this.reservations.find(rsv => rsv.id === qrReservation.id);
       },
       closeQrModal() {
         if (this.qrReservation.visited_at) {
