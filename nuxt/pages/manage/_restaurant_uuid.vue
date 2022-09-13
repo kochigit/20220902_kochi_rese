@@ -107,12 +107,12 @@
     <div class="flex--sb">
       <h2 class="manage__title">店舗情報</h2>
       <span class="edit-restaurant pointer" @click="toggleEdit">
-        <img src="~assets/img/iconmonstr-pencil-8-black.svg" class="edit-img pointer"  />
+        <img src="~assets/img/iconmonstr-pencil-8-black.svg" class="edit-img pointer"/>
         編集
       </span>
     </div>
     <div class="managed-restaurant">
-      <img :src="'http://localhost:8000/' + restaurant.img_path" class="managed-restaurant-img" />
+      <img :src="'http://localhost:8000/' + restaurant.img_path" class="managed-restaurant-img"/>
       <div class="managed-restaurant-info">
         <p class="managed-restaurant-uuid">店舗ID：{{restaurant.uuid}}</p>
         <p class="managed-restaurant-name">店舗名：{{ restaurant.name }}</p>
@@ -121,6 +121,63 @@
         <p class="restaurant-description">紹介文：<br>{{ restaurant.description }}</p>
       </div>
     </div>
+
+    <div class="emailing">
+      <button class="email-button" @click="mailActive = true">ユーザーにメールを送信する</button>
+      <transition name="fade">
+        <div class="send-email-modal" v-if="mailActive" @click.self="mailActive = false">
+          <div class="create-email-content">
+            <validation-observer ref="obs" v-slot="ObserverProps">
+              <table>
+                <tr>
+                  <th>送信先</th>
+                  <td class="arrow">
+                    <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
+                  </td>
+                  <td class="content checkbox">
+                    <validation-provider v-slot="{errors}" rules="required">
+                      <input type="checkbox" v-model="sendTo" name="送信先" id="visited" value="visited">
+                      <label for="visited">ご来店済み</label>
+                      <input type="checkbox" v-model="sendTo" name="送信先" id="reserved" value="reserved">
+                      <label for="reserved">ご予約済み（未来店）</label>
+                      <input type="checkbox" v-model="sendTo" name="送信先" id="liked" value="liked">
+                      <label for="liked">お気に入り登録済み</label>
+                      <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
+                    </validation-provider>
+                  </td>
+                </tr>
+                <tr>
+                  <th>タイトル</th>
+                  <td class="arrow">
+                    <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
+                  </td>
+                  <td class="content title">
+                    <validation-provider v-slot="{errors}" rules="required|max:30">
+                      <input type="text" v-model="title" name="タイトル">
+                      <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
+                    </validation-provider>
+                  </td>
+                </tr>
+                <tr class="previous-description">
+                  <th>本文</th>
+                  <td class="arrow">
+                    <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
+                  </td>
+                  <td class="content body">
+                    <validation-provider v-slot="{errors}" rules="required|max:2000">
+                      <textarea v-model="body" rows="10" name="本文"></textarea>
+                      <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
+                    </validation-provider>
+                  </td>
+                </tr>
+              </table>
+              <button @click="sendEmails" class="email-button" :disabled="ObserverProps.invalid || !ObserverProps.validated">メールを送信する</button>
+            </validation-observer>
+          </div>
+        </div>
+      </transition>
+    </div>
+
     <div class="reservations">
       <div class="flex--sb">
         <h2 class="manage__title">予約一覧</h2>
@@ -169,6 +226,11 @@
         paused: false,
         qrActive: false,
         qrReservation: null,
+        mailActive: false,
+        sendTo: [],
+        title: null,
+        body: null,
+        
       }
     },
     methods: {
@@ -287,6 +349,26 @@
           this.restaurant.reservations[index].visited_at = response.data.reservation.visited_at;
         } catch (error) {
           alert(`エラーが発生しました。サーバー管理者にお問い合わせください。\n${error}`)
+        }
+      },
+      async sendEmails() {
+        const boo = confirm(`メールを送信しますか？`);
+        if (boo == false) {
+          return;
+        }
+        const email = {
+          uuid: this.restaurant.uuid,
+          name: this.restaurant.name,
+          sendTo: this.sendTo,
+          title: this.title,
+          body: this.body,
+        }
+        try {
+          await this.$axios.post('/v1/management/email', email);
+          alert('メール送信が完了しました');
+          this.mailActive = false;
+        } catch (error) {
+          alert(error);
         }
       },
     },
@@ -549,5 +631,96 @@
 }
 .camera {
   width: 70%;
+}
+
+.emailing {
+  margin-bottom: 50px;
+}
+.email-button {
+  background: royalblue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 10%;
+  font-size: 15px;
+  box-shadow: 1px 1px 3px gray;
+  display: block;
+  margin: 0 auto;
+}
+.send-email-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+.create-email-content {
+  width: 90%;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+  padding: 20px 30px 30px;
+  box-shadow: 0 0 7px gainsboro;
+}
+.create-email-content table {
+  margin-bottom: 20px;
+}
+.create-email-content th {
+  width: 10%;
+  text-align: left;
+}
+.content {
+  width: 70%;
+  padding: 5px 0;
+}
+.arrow {
+  width: 1%;
+  padding-right: 20px;
+}
+.create-email-content table * {
+  vertical-align: middle;
+  line-height: 1.2;
+}
+.content.title input {
+  border: none;
+  border-radius: 5px;
+  padding: 5px 5px;
+  font-size: 15px;
+  width: 100%;
+  background: whitesmoke;
+  color: black;
+  outline-color: royalblue;
+}
+.content.checkbox label {
+  margin-right: 16px;
+  font-size: 15px;
+}
+.content.checkbox input:checked + label {
+  color: lightskyblue;
+  font-weight: bold;
+}
+input.input-img {
+  font-size: 13px;
+}
+.content textarea {
+  border: none;
+  border-radius: 5px;
+  resize: none;
+  width: 100%;
+  font-size: 15px;
+  padding: 5px 5px;
+  background: whitesmoke;
+  outline-color: royalblue;
+}
+.error--lightcoral {
+  color: lightcoral;
+  font-size: 14px;
+  margin-top: 2px;
 }
 </style>

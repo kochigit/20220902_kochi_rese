@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EmailFromManager;
+use App\Models\Favorite;
 use App\Models\Management;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Restaurant;
+use Illuminate\Support\Facades\Mail;
 
 class ManagementController extends Controller
 {
@@ -57,6 +61,44 @@ class ManagementController extends Controller
         $restaurant->load('reservations.user');
         return response()->json(compact('restaurant'), 200);
     }
+
+
+    public function sendEmails(Request $request)
+    {
+        $users = collect();
+        if (in_array('visited', $request->sendTo)) {
+            $users = User::Join('reservations','users.uuid','reservations.user_uuid')
+            ->where([
+                ['restaurant_uuid', $request->uuid],
+                ['visited_at', '!=', null]
+            ])->select('name','email')->get()->unique('email');
+        }
+        if (in_array('reserved', $request->sendTo)) {
+            $users = $users->concat(
+                User::Join('reservations','users.uuid','reservations.user_uuid')
+                ->where([
+                    ['restaurant_uuid', $request->uuid],
+                    ['visited_at', null]
+                ])->select('name','email')->get()->unique('email')
+            );
+        }
+        if (in_array('liked', $request->sendTo)) {
+            $users = $users->concat(
+                User::Join('favorites','users.uuid','favorites.user_uuid')
+                ->where('restaurant_uuid', $request->uuid)
+                ->select('name','email')->get()->unique('email')
+            );
+        }
+        $users = $users->concat(
+            User::Join('managements', 'users.uuid', 'managements.user_uuid')
+            ->where('restaurant_uuid', $request->uuid)->select('name','email')->get()
+        );
+        $users = $users->unique('email');
+        foreach ($users as $user) {
+            Mail::to($user)->send(new EmailFromManager($user, $request));
+        }
+        return response()->json(null, 200);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -81,7 +123,7 @@ class ManagementController extends Controller
             $manager->load('managements.restaurant:uuid,name,area,genre,img_path');
             return response()->json(compact('manager'), 201);
         } else {
-            return response()->json(403);
+            return response()->json(null, 403);
         }
     }
 

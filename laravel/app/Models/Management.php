@@ -23,4 +23,9 @@ class Management extends Model
         return $this->hasOne('App\Models\Restaurant', 'uuid', 'restaurant_uuid');
         // belongsToの方が正しい気がするが、belongsToではなぜかデータを引っ張ってこれなかった。
     }
+
+    public function user()
+    {
+        return $this->hasOne('App\Models\User', 'uuid', 'user_uuid');
+    }
 }

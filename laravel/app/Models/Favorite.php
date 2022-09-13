@@ -11,14 +11,19 @@ class Favorite extends Model
 
     protected $guarded = ['id'];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function restaurant()
     {
         return $this->hasOne('App\Models\Restaurant', 'uuid', 'restaurant_uuid');
         // belongsToの方が正しい気がするが、belongsToではデータを引っ張ってこれなかった。
     }
 
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-    ];
+    public function user()
+    {
+        return $this->hasOne('App\Models\User', 'uuid', 'user_uuid');
+    }
 }

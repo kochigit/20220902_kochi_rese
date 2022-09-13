@@ -43,6 +43,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('/', [ManagementController::class, 'store']);
         Route::post('check', [ManagementController::class, 'checkManagement']);
         Route::get('managedRestaurant/{restaurant}', [ManagementController::class, 'getManagedRestaurant']);
+        Route::post('email', [ManagementController::class, 'sendEmails']);
     });
 });
 

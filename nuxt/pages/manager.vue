@@ -1,22 +1,22 @@
 <template>
   <div class="manager" v-if="managedRestaurants">
 
-    
-
     <div class="managed-restaurants">
-      <h2>管理中の店舗</h2>
-      <div class="restaurant-tile" v-for="management in managedRestaurants" :key="management.id">
-        <img :src="'http://localhost:8000/' + management.restaurant.img_path" class="tile-img" />
-        <div class="tile-info">
-          <h3 class="tile-name">{{ management.restaurant.name }}</h3>
-          <span class="tile-tag">#{{ management.restaurant.area }}</span>
-          <span class="tile-tag">#{{ management.restaurant.genre }}</span>
-          <span class="tile-tag" v-if="management.approved_at">承認済み</span>
-          <span class="tile-tag" v-else>未承認！！！</span>
-          <p class="tile-uuid">店舗ID：{{management.restaurant.uuid}}</p>
-          <NuxtLink :to="'/manage/' + management.restaurant_uuid" class="to-restaurant-for-manager">予約確認・店舗情報編集ページへ</NuxtLink>
+      <h2 class="manager__title">管理中の店舗</h2>
+      <transition-group name="card" tag="div">
+        <div class="restaurant-tile" v-for="management in managedRestaurants" :key="management.id" :data-index="management">
+          <img :src="'http://localhost:8000/' + management.restaurant.img_path" class="tile-img" />
+          <div class="tile-info">
+            <h3 class="tile-name">{{ management.restaurant.name }}</h3>
+            <span class="tile-tag">#{{ management.restaurant.area }}</span>
+            <span class="tile-tag">#{{ management.restaurant.genre }}</span>
+            <span class="tile-tag" v-if="management.approved_at">承認済み</span>
+            <span class="tile-tag" v-else>未承認！！！</span>
+            <p class="tile-uuid">店舗ID：{{management.restaurant.uuid}}</p>
+            <NuxtLink :to="'/manage/' + management.restaurant_uuid" class="to-restaurant-for-manager">予約確認・店舗情報編集ページへ</NuxtLink>
+          </div>
         </div>
-      </div>
+      </transition-group>
       <p v-if="!managedRestaurants[0]">店舗代表者になっている店舗はありません。</p>
     </div>
 
@@ -25,100 +25,104 @@
       <transition name="fade">
       <div class="create-restaurant-modal" v-if="isShow" @click.self="toggleModal">
         <div class="create-restaurant-info">
-        <validation-observer ref="obs" v-slot="ObserverProps">
-
-          <table>
-            <tr>
-              <th>画像</th>
-              <td class="arrow">
-                <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
-              </td>
-              <td class="new-info">
-                <validation-provider rules="required|image" ref="provider" v-slot="{ errors }" name="画像">
-                  <input type="file" @change="imageSelected" class="input-img">
-                <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
-                </validation-provider>
-              </td>
-            </tr>
-            <transition name="fade-in">
-              <tr v-if="url" class="preview">
-                <th></th>
-                <td></td>
-                <td>
-                  <img :src="url">
+          <validation-observer ref="obs" v-slot="ObserverProps">
+            <table>
+              <tr>
+                <th>画像</th>
+                <td class="arrow">
+                  <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
+                </td>
+                <td class="new-info">
+                  <validation-provider rules="required|image" ref="provider" v-slot="{ errors }" name="画像">
+                    <input type="file" @change="imageSelected" class="input-img">
+                  <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
+                  </validation-provider>
                 </td>
               </tr>
-            </transition>
-            <tr>
-              <th>店舗名</th>
-              <td class="arrow">
-                <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
-              </td>
-              <td class="new-info">
-                <validation-provider v-slot="{errors}" rules="required|max:30">
-                  <input type="text" v-model="name" name="店舗名">
-                  <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
-                </validation-provider>
-              </td>
-            </tr>
-            <tr>
-              <th>エリア</th>
-              <td class="arrow">
-                <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
-              </td>
-              <td class="new-info">
-                <validation-provider v-slot="{errors}" rules="required|max:20">
-                  <input type="text" v-model="area" name="エリア">
-                  <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
-                </validation-provider>
-              </td>
-            </tr>
-            <tr>
-              <th>ジャンル</th>
-              <td class="arrow">
-                <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
-              </td>
-              <td class="new-info">
-                <validation-provider v-slot="{errors}" rules="required|max:20">
-                  <input type="text" v-model="genre" name="ジャンル">
-                  <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
-                </validation-provider>
-              </td>
-            </tr>
-            <tr class="previous-description">
-              <th>紹介文</th>
-              <td class="arrow">
-                <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
-              </td>
-              <td class="new-info">
-                <validation-provider v-slot="{errors}" rules="required|max:300">
-                  <textarea v-model="description" rows="10" name="紹介文"></textarea>
-                  <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
-                </validation-provider>
-              </td>
-            </tr>
-          </table>
-          <button @click="createRestaurant" class="create-button" :disabled="ObserverProps.invalid || !ObserverProps.validated">店舗を新規作成する</button>
-        </validation-observer>
+              <transition name="fade-in">
+                <tr v-if="url" class="preview">
+                  <th></th>
+                  <td></td>
+                  <td>
+                    <img :src="url">
+                  </td>
+                </tr>
+              </transition>
+              <tr>
+                <th>店舗名</th>
+                <td class="arrow">
+                  <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
+                </td>
+                <td class="new-info">
+                  <validation-provider v-slot="{errors}" rules="required|max:30">
+                    <input type="text" v-model="name" name="店舗名">
+                    <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
+                  </validation-provider>
+                </td>
+              </tr>
+              <tr>
+                <th>エリア</th>
+                <td class="arrow">
+                  <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
+                </td>
+                <td class="new-info">
+                  <validation-provider v-slot="{errors}" rules="required|max:20">
+                    <input type="text" v-model="area" name="エリア">
+                    <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
+                  </validation-provider>
+                </td>
+              </tr>
+              <tr>
+                <th>ジャンル</th>
+                <td class="arrow">
+                  <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
+                </td>
+                <td class="new-info">
+                  <validation-provider v-slot="{errors}" rules="required|max:20">
+                    <input type="text" v-model="genre" name="ジャンル">
+                    <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
+                  </validation-provider>
+                </td>
+              </tr>
+              <tr class="previous-description">
+                <th>紹介文</th>
+                <td class="arrow">
+                  <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
+                </td>
+                <td class="new-info">
+                  <validation-provider v-slot="{errors}" rules="required|max:300">
+                    <textarea v-model="description" rows="10" name="紹介文"></textarea>
+                    <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
+                  </validation-provider>
+                </td>
+              </tr>
+            </table>
+            <button @click="createRestaurant" class="create-button" :disabled="ObserverProps.invalid || !ObserverProps.validated">店舗を新規作成する</button>
+          </validation-observer>
         </div>
       </div>
     </transition>
     </div>
 
     <div class="unmanaged-restaurants">
-      <h2>店舗代表者登録</h2>
-      <transition-group name="card" tag="div">
-        <div class="restaurant-tile" v-for="restaurant in restaurants" :key="restaurant.uuid" :data-index="restaurant">
-          <img :src="'http://localhost:8000/' + restaurant.img_path" class="tile-img" />
-          <div class="tile-info">
-            <h3 class="tile-name">{{ restaurant.name }}</h3>
-            <span class="tile-tag">#{{ restaurant.area }}</span>
-            <span class="tile-tag">#{{ restaurant.genre }}</span>
-            <p class="tile-uuid">店舗ID：{{restaurant.uuid}}</p>
-            <button class="request-button" @click="requestManagement(restaurant.uuid)">店舗代表者の登録を申請する</button>
-          </div>
+      <h2 class="manager__title" @click="unmanagedActive = !unmanagedActive">店舗代表者登録</h2>
+
+      <transition name="fade">
+        <div v-if="unmanagedActive">
+          <transition-group name="card" tag="div">
+            <div class="restaurant-tile" v-for="restaurant in restaurants" :key="restaurant.uuid" :data-index="restaurant">
+              <img :src="'http://localhost:8000/' + restaurant.img_path" class="tile-img" />
+              <div class="tile-info">
+                <h3 class="tile-name">{{ restaurant.name }}</h3>
+                <span class="tile-tag">#{{ restaurant.area }}</span>
+                <span class="tile-tag">#{{ restaurant.genre }}</span>
+                <p class="tile-uuid">店舗ID：{{restaurant.uuid}}</p>
+                <button class="request-button" @click="requestManagement(restaurant.uuid)">店舗代表者の登録を申請する</button>
+              </div>
+            </div>
+          </transition-group>
         </div>
-      </transition-group>
+      </transition>
     </div>
   </div>
 </template>
@@ -137,6 +141,7 @@ export default {
       description: null,
       image: null,
       url: null,
+      unmanagedActive: false,
     }
   },
   methods: {
@@ -213,7 +218,10 @@ export default {
 .managed-restaurants, .create-restaurant {
   margin-bottom: 50px;
 }
-
+.manager__title {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
 .to-restaurant-for-manager {
   display: inline-block;
   background: coral;
@@ -223,8 +231,6 @@ export default {
   font-size: 14px;
   box-shadow: 1px 1px 3px gray;
 }
-
-
 .restaurant-tile {
   display: flex;
   background: white;

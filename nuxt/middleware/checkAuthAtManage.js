@@ -11,7 +11,6 @@ export default async function ({ store, redirect, route }) {
       alert('この店舗の代表者ではありません。')
       return redirect('/manager')
     }
-    
   } catch (error) {
     return redirect('/404')
   }
