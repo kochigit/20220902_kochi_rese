@@ -16,7 +16,10 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    ],
+    script: [
+      { src: 'https://js.stripe.com/v3' },
+    ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -31,6 +34,7 @@ export default {
     { src: '~plugins/vue-js-modal.js', mode: 'client' },
     '~plugins/vue-qrcode.js',
     '~plugins/vue-qrcode-reader.js',
+    { src: '~/plugins/vue-stripe.js', mode: 'client'},
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -45,7 +49,7 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
-    // '@nuxtjs/vuetify',
+    '@nuxtjs/dotenv',
   ],
 
   auth: {

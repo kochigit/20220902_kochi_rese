@@ -136,11 +136,11 @@
                   </td>
                   <td class="content checkbox">
                     <validation-provider v-slot="{errors}" rules="required">
-                      <input type="checkbox" v-model="sendTo" name="送信先" id="visited" value="visited">
+                      <input type="checkbox" v-model="sendTo" name="送信先" id="visited" value="visited" class="pointer">
                       <label for="visited">ご来店済み</label>
-                      <input type="checkbox" v-model="sendTo" name="送信先" id="reserved" value="reserved">
+                      <input type="checkbox" v-model="sendTo" name="送信先" id="reserved" value="reserved" class="pointer">
                       <label for="reserved">ご予約済み（未来店）</label>
-                      <input type="checkbox" v-model="sendTo" name="送信先" id="liked" value="liked">
+                      <input type="checkbox" v-model="sendTo" name="送信先" id="liked" value="liked" class="pointer">
                       <label for="liked">お気に入り登録済み</label>
                       <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
                     </validation-provider>
@@ -700,6 +700,7 @@
 .content.checkbox label {
   margin-right: 16px;
   font-size: 15px;
+  cursor: pointer;
 }
 .content.checkbox input:checked + label {
   color: lightskyblue;

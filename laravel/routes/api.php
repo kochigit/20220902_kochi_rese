@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\ManagementController;
+use App\Http\Controllers\StripeController;
 
 Route::group([
     'middleware' => ['auth:api'],
@@ -22,6 +23,7 @@ Route::group([
     Route::get('admin', [AuthController::class, 'admin']);
     Route::get('email-verify', [AuthController::class, 'sendEmailVerification']);
     Route::post('email-verify', [AuthController::class, 'verifyEmail']);
+    Route::post('payment', [StripeController::class, 'pay']);
 });
 
 

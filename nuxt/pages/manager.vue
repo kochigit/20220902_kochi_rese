@@ -11,7 +11,7 @@
             <span class="tile-tag">#{{ management.restaurant.area }}</span>
             <span class="tile-tag">#{{ management.restaurant.genre }}</span>
             <span class="tile-tag" v-if="management.approved_at">承認済み</span>
-            <span class="tile-tag" v-else>未承認！！！</span>
+            <strong class="tile-tag" v-else>※未承認</strong>
             <p class="tile-uuid">店舗ID：{{management.restaurant.uuid}}</p>
             <NuxtLink :to="'/manage/' + management.restaurant_uuid" class="to-restaurant-for-manager">予約確認・店舗情報編集ページへ</NuxtLink>
           </div>
@@ -105,7 +105,8 @@
     </div>
 
     <div class="unmanaged-restaurants">
-      <h2 class="manager__title" @click="unmanagedActive = !unmanagedActive">店舗代表者登録</h2>
+      <h2 class="manager__title" >店舗代表者登録</h2>
+      <button @click="unmanagedActive = !unmanagedActive" class="unmanaged-restaurants-button">他店舗一覧の表示切替</button>
 
       <transition name="fade">
         <div v-if="unmanagedActive">
@@ -215,7 +216,7 @@ export default {
 </script>
 
 <style>
-.managed-restaurants, .create-restaurant {
+.managed-restaurants {
   margin-bottom: 50px;
 }
 .manager__title {
@@ -230,6 +231,7 @@ export default {
   padding: 6px 10%;
   font-size: 14px;
   box-shadow: 1px 1px 3px gray;
+  margin-left: auto;
 }
 .restaurant-tile {
   display: flex;
@@ -242,6 +244,10 @@ export default {
 .tile-img {
   width: 130px;
   border-radius: 5px;
+  margin-right: 10px;
+}
+.tile-info *:not(a){
+  padding-bottom: 5px;
   margin-right: 10px;
 }
 .request-button {
@@ -264,7 +270,9 @@ export default {
   display: block;
   margin: 0 auto;
 }
-
+.create-restaurant {
+  margin-bottom: 100px;
+}
 .create-restaurant-modal {
   position: fixed;
   top: 0;
@@ -359,5 +367,19 @@ input.input-img {
   color: lightcoral;
   font-size: 14px;
   margin-top: 2px;
+}
+.unmanaged-restaurants-button {
+  background: lightseagreen;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 10%;
+  font-size: 15px;
+  box-shadow: 1px 1px 3px gray;
+  display: block;
+  margin: 30px auto;
+}
+strong.tile-tag {
+  color: coral;
 }
 </style>
