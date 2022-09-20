@@ -10,6 +10,7 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\ManagementController;
 use App\Http\Controllers\StripeController;
+use App\Models\Management;
 
 Route::group([
     'middleware' => ['auth:api'],
@@ -46,6 +47,10 @@ Route::group(['prefix' => 'v1'], function() {
         Route::post('check', [ManagementController::class, 'checkManagement']);
         Route::get('managedRestaurant/{restaurant}', [ManagementController::class, 'getManagedRestaurant']);
         Route::post('email', [ManagementController::class, 'sendEmails']);
+        Route::get('/', [ManagementController::class, 'index']);
+        Route::post('approval', [ManagementController::class, 'approve']);
+        Route::post('unapproval', [ManagementController::class, 'unapprove']);
+        Route::delete('/{management}', [ManagementController::class, 'destroy']);
     });
 });
 

@@ -9,6 +9,7 @@ use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Restaurant;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 class ManagementController extends Controller
@@ -99,22 +100,39 @@ class ManagementController extends Controller
         }
         return response()->json(null, 200);
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+
+    public function approve(Request $request)
     {
-        //
+        $match = [
+            ['restaurant_uuid', $request->restaurant_uuid],
+            ['user_uuid', $request->user_uuid]
+        ];
+        Management::where($match)->update(['approved_at' => Carbon::now()]);
+        $management = Management::with(['restaurant', 'user'])->where($match)->first();
+        return response()->json(compact('management'), 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+    public function unapprove(Request $request)
+    {
+        $match = [
+            ['restaurant_uuid', $request->restaurant_uuid],
+            ['user_uuid', $request->user_uuid]
+        ];
+        Management::where($match)->update(['approved_at' => null]);
+        $management = Management::with(['restaurant', 'user'])->where($match)->first();
+        return response()->json(compact('management'), 200);
+    }
+
+
+    public function index()
+    {
+        $managements = Management::with(['restaurant', 'user'])->get();
+        return response()->json(compact('managements'), 200);
+    }
+
+
     public function store(Request $request)
     {
         $manager = auth()->user();
@@ -158,6 +176,7 @@ class ManagementController extends Controller
      */
     public function destroy(Management $management)
     {
-        //
+        $management->delete();
+        return response()->json(compact('management'), 200);
     }
 }

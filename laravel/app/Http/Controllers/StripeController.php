@@ -22,10 +22,10 @@ class StripeController extends Controller
                 'amount' => 1000,
                 'currency' => 'jpy',
                 'description' => 'Test Payment! NOT Charged!',
-                'source' => $request->all(),
+                'source' => $request->id,
             ]);
         } catch (Exception $e) {
-            return response()->json(null, 204);
+            return response()->json($request->id, 200);
         }
         // } catch (Exception $e) {
         //     return response()->json([
@@ -39,6 +39,6 @@ class StripeController extends Controller
             'success' => true,
             'data' => $charge,
             'message' => 'お支払いが完了しました。（テスト）'
-        ], 200);
+        ], 201);
     }
 }

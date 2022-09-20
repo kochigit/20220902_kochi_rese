@@ -53,19 +53,17 @@ export default {
       this.$nuxt.$loading.start()
       try {
         // 支払い方法を作成
-        const paymentMethod = await this.$stripe.createPaymentMethod({
-          type: 'card',
-          card: this.cardElement,
-        })
-        if (paymentMethod.error) {
-          this.cardErrMessage = paymentMethod.error.message || 'カード番号が無効です。';
+        console.log(this.$stripe);
+        const result = await this.$stripe.createToken(this.cardElement)
+        if (result.error) {
+          this.cardErrMessage = result.error.message || 'カード番号が無効です。';
           return false;
         } else {
           this.cardErrMessage = ''
         }
-        console.log(paymentMethod.paymentMethod);
+        console.log(result.token);
         
-        const response = await this.$axios.post('/auth/payment', paymentMethod.paymentMethod)
+        const response = await this.$axios.post('/auth/payment', result.token)
         console.log(response);
         // 支払い方法が作成されたので、その支払い方法のIDを使って支払い処理をおこないます。
         // ...以下略

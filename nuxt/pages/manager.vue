@@ -109,7 +109,7 @@
       <button @click="unmanagedActive = !unmanagedActive" class="unmanaged-restaurants-button">他店舗一覧の表示切替</button>
 
       <transition name="fade">
-        <div v-if="unmanagedActive">
+        <div v-show="unmanagedActive">
           <transition-group name="card" tag="div">
             <div class="restaurant-tile" v-for="restaurant in restaurants" :key="restaurant.uuid" :data-index="restaurant">
               <img :src="'http://localhost:8000/' + restaurant.img_path" class="tile-img" />
@@ -381,5 +381,23 @@ input.input-img {
 }
 strong.tile-tag {
   color: coral;
+}
+
+.card-enter-active, .card-move {
+  transition: opacity 1s, transform 1s;
+}
+.card-leave-active {
+  position: absolute;
+  opacity: 0.3;
+  transition: opacity 1s transform 1s;
+  right: -30%;
+  bottom: -30%;
+}
+.card-enter {
+  opacity: 0;
+  transform: translateY(-35px);
+}
+.card-leave-to {
+  opacity: 0;
 }
 </style>
