@@ -8,7 +8,7 @@
         <h2 class="restaurant-name">{{ restaurant.name }}</h2>
       </div>
       <img
-        :src="'http://localhost:8000/' + restaurant.img_path"
+        :src="restaurant.img_path"
         class="restaurant-img"
       />
       <span class="restaurant-tag">#{{ restaurant.area }}</span>

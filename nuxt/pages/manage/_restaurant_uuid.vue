@@ -37,7 +37,7 @@
         <div class="edit-restaurant-img">
           <input type="file" @change="imageSelected" class="update-img">
           <div class="flex--sb">
-            <img :src="'http://localhost:8000/' + restaurant.img_path" class="previous-img" />
+            <img :src="restaurant.img_path" class="previous-img" />
             <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
             <transition name="fade-in">
               <div v-if="url" class="preview">
@@ -112,7 +112,7 @@
       </span>
     </div>
     <div class="managed-restaurant">
-      <img :src="'http://localhost:8000/' + restaurant.img_path" class="managed-restaurant-img"/>
+      <img :src="restaurant.img_path" class="managed-restaurant-img"/>
       <div class="managed-restaurant-info">
         <p class="managed-restaurant-uuid">店舗ID：{{restaurant.uuid}}</p>
         <p class="managed-restaurant-name">店舗名：{{ restaurant.name }}</p>

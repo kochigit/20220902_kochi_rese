@@ -199,7 +199,7 @@
         <div v-if="favorites">
           <div class="favorite-card-wrap flex-wrap">
             <div class="favorite-card" v-for="fav in favorites" :key="fav.id">
-              <img :src="'http://localhost:8000/' + fav.restaurant.img_path" class="card-img" />
+              <img :src="fav.restaurant.img_path" class="card-img" />
               <div class="card-info">
                 <h2 class="card-name">{{ fav.restaurant.name }}</h2>
                 <span class="card-tag">#{{ fav.restaurant.area }}</span>

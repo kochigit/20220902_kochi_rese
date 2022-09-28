@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Models\Management;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 
@@ -28,10 +29,17 @@ class RestaurantController extends Controller
 
         $uuid = (String) Str::uuid();
         $imageName = $request->image->getClientOriginalName();
-        $request->image->storeAs("public/restaurant-img/$uuid/", $imageName);
+        $imgPath = "public/restaurant-img/$uuid/";
+        if (config('app.env')==='production') {
+            $path = $request->image->storeAs($imgPath, $imageName, 's3');
+            $imgPath = Storage::disk('s3')->url($path);
+        } else {
+            $request->image->storeAs($imgPath, $imageName);
+            $imgPath = config('app.url')."storage/restaurant-img/$uuid/$imageName";
+        }
         $newRestaurant = Restaurant::create([
             'uuid' => $uuid,
-            'img_path' => "storage/restaurant-img/$uuid/$imageName",
+            'img_path' => $imgPath,
             'name' => $request->name,
             'area' => $request->area,
             'genre' => $request->genre,
@@ -53,13 +61,7 @@ class RestaurantController extends Controller
         return response()->json(compact('restaurant'), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Restaurant  $restaurant
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, Restaurant $restaurant)
     {
         $manager = auth()->user();
@@ -100,13 +102,20 @@ class RestaurantController extends Controller
         
         if ($isManager) {
             $imageName = $request->image->getClientOriginalName();
-            $request->image->storeAs("public/restaurant-img/$request->uuid/", $imageName);
-            Restaurant::where('uuid', $request->uuid)->update([
-                'img_path' => "storage/restaurant-img/$request->uuid/$imageName"
-            ]);
-            return response()->json([
-                'img_path' => "storage/restaurant-img/$request->uuid/$imageName"
-            ], 200);
+            $imgPath = "public/restaurant-img/$request->uuid/";
+            if (config('app.env')==='production') {
+                $path = $request->image->storeAs($imgPath, $imageName, 's3');
+                $imgPath = Storage::disk('s3')->url($path);
+            } else {
+                $request->image->storeAs($imgPath, $imageName);
+                $imgPath = config('app.url')."storage/restaurant-img/$request->uuid/$imageName";
+            }
+                Restaurant::where('uuid', $request->uuid)->update([
+                    'img_path' => $imgPath
+                ]);
+                return response()->json([
+                    'img_path' => $imgPath
+                ], 200);
         } else {
             return response()->json([
                 'message' => '権限がありません'
@@ -129,13 +138,13 @@ class RestaurantController extends Controller
     {
         $match = [];
         if ($request->area) {
-            $match[] =['area', '=', $request->area];
+            $match[] = ['area', '=', $request->area];
         }
         if ($request->genre) {
-            $match[] =['genre', '=', $request->genre];
+            $match[] = ['genre', '=', $request->genre];
         }
         if ($request->word) {
-            $match[] =['name', 'LIKE', "%$request->word%"];
+            $match[] = ['name', 'LIKE', "%$request->word%"];
         }
         $searchedRestaurants = Restaurant::with('favorites')->where($match)->get();
         return response()->json(compact('searchedRestaurants'), 200);

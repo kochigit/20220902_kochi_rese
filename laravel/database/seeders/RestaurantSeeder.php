@@ -30,7 +30,7 @@ class RestaurantSeeder extends Seeder
                 'area' => $row[1],
                 'genre' => $row[2],
                 'description' => $row[3],
-                'img_path' => $row[4],
+                'img_path' => config('app.url').$row[4],
             ]);
         });
 

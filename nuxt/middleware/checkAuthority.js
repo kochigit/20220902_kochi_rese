@@ -20,7 +20,10 @@ export default async function ({ store, redirect, route }) {
     case '/manager':
       if (response.status === 204) {
         return redirect('/404');
-      } 
+      } else if (response.data.authority === 'admin') {
+        alert('権限がありません。');
+        return redirect('/');
+      }
     break;
   }
 }

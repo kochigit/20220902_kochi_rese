@@ -66,7 +66,6 @@ export default {
         const response = await this.$axios.post('/auth/payment', result.token)
         console.log(response);
         // 支払い方法が作成されたので、その支払い方法のIDを使って支払い処理をおこないます。
-        // ...以下略
       } catch(error) {
         alert(error)
       } finally {

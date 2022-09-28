@@ -23,7 +23,7 @@
 
     <transition-group name="card" tag="div" class="restaurant-card-wrap flex-wrap">
       <div class="restaurant-card" v-for="restaurant in restaurants" :key="restaurant.uuid" :data-index="restaurant">
-        <img :src="'http://localhost:8000/' + restaurant.img_path" class="card-img" />
+        <img :src="restaurant.img_path" class="card-img" />
         <div class="card-info">
           <h2 class="card-name">{{ restaurant.name }}</h2>
           <span class="card-tag">#{{ restaurant.area }}</span>

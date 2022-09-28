@@ -5,7 +5,7 @@
       <h2 class="manager__title">管理中の店舗</h2>
       <transition-group name="card" tag="div">
         <div class="restaurant-tile" v-for="management in managedRestaurants" :key="management.id" :data-index="management">
-          <img :src="'http://localhost:8000/' + management.restaurant.img_path" class="tile-img" />
+          <img :src="management.restaurant.img_path" class="tile-img" />
           <div class="tile-info">
             <h3 class="tile-name">{{ management.restaurant.name }}</h3>
             <span class="tile-tag">#{{ management.restaurant.area }}</span>
@@ -112,7 +112,7 @@
         <div v-show="unmanagedActive">
           <transition-group name="card" tag="div">
             <div class="restaurant-tile" v-for="restaurant in restaurants" :key="restaurant.uuid" :data-index="restaurant">
-              <img :src="'http://localhost:8000/' + restaurant.img_path" class="tile-img" />
+              <img :src="restaurant.img_path" class="tile-img" />
               <div class="tile-info">
                 <h3 class="tile-name">{{ restaurant.name }}</h3>
                 <span class="tile-tag">#{{ restaurant.area }}</span>
