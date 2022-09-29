@@ -31,7 +31,7 @@
           <li class="slide-menu__content" @click="closeMenu" v-if="$auth.user.authority ==='admin'">
             <NuxtLink to="/admin">Admin</NuxtLink>
           </li>
-          <li class="slide-menu__content" @click="closeMenu" v-if="$auth.user.authority ==='admin' || $auth.user.authority === 'manager'">
+          <li class="slide-menu__content" @click="closeMenu" v-if="$auth.user.authority === 'manager'">
             <NuxtLink to="/manager">Manager</NuxtLink>
           </li>
         </ul>

@@ -30,6 +30,6 @@ class CreateManagementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('management');
+        Schema::dropIfExists('managements');
     }
 }
