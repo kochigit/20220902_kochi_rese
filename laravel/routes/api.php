@@ -29,9 +29,9 @@ Route::group([
 
 
 Route::group(['prefix' => 'v1'], function() {
-    Route::apiResource('restaurant', RestaurantController::class);
+    Route::apiResource('restaurant', RestaurantController::class)->middleware('cors');
     Route::post('search-restaurant', [RestaurantController::class, 'search']);
-    Route::post('restaurant-img', [RestaurantController::class, 'updateImage']);
+    Route::post('restaurant-img', [RestaurantController::class, 'updateImage'])->middleware('cors');
     Route::apiResource('user', UserController::class);
     Route::apiResource('favorite', FavoriteController::class)->only(['store','destroy']);
     Route::apiResource('reservation', ReservationController::class)->only(['store', 'update','destroy']);
