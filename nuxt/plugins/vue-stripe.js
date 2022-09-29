@@ -6,7 +6,7 @@ import {
 } from '@vue-stripe/vue-stripe';
 
 const options = {
-  pk: process.env.STRIPE_PK,
+  pk: `${ process.env.STRIPE_PK }`,
   stripeAccount: process.env.STRIPE_ACCOUNT,
   apiVersion: process.env.STRIPE_API_VERSION,
   locale: 'ja'
