@@ -256,7 +256,7 @@
         formData.set('image', this.image);
         formData.set('uuid', this.restaurant.uuid);
         try {
-          const response = await this.$axios.post('/v1/restaurant-img', formData);
+          const response = await this.$axios.post('/v1/restaurant-img', formData, {headers: {'Access-Control-Allow-Origin': '*'}});
           this.image = null;
           this.url = null;
           alert('画像の変更が完了しました。')
