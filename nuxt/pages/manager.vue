@@ -7,11 +7,13 @@
         <div class="restaurant-tile" v-for="management in managedRestaurants" :key="management.id" :data-index="management">
           <img :src="management.restaurant.img_path" class="tile-img" />
           <div class="tile-info">
-            <h3 class="tile-name">{{ management.restaurant.name }}</h3>
+            <div class="tile-name-approved-wrap">
+              <h3 class="tile-name">{{ management.restaurant.name }}</h3>
+              <span class="tile-tag approved" v-if="management.approved_at">承認済み</span>
+              <span class="tile-tag unapproved" v-else>※未承認</span>
+            </div>
             <span class="tile-tag">#{{ management.restaurant.area }}</span>
             <span class="tile-tag">#{{ management.restaurant.genre }}</span>
-            <span class="tile-tag" v-if="management.approved_at">承認済み</span>
-            <strong class="tile-tag" v-else>※未承認</strong>
             <p class="tile-uuid">店舗ID：{{management.restaurant.uuid}}</p>
             <NuxtLink :to="'/manage/' + management.restaurant_uuid" class="to-restaurant-for-manager">予約確認・店舗情報編集ページへ</NuxtLink>
           </div>
@@ -231,7 +233,9 @@ export default {
   padding: 6px 10%;
   font-size: 14px;
   box-shadow: 1px 1px 3px gray;
-  margin-left: auto;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }
 .restaurant-tile {
   display: flex;
@@ -240,15 +244,24 @@ export default {
   border-radius: 5px;
   box-shadow: 2px 2px 5px lightgray;
   padding: 5px;
+  position: relative;
 }
 .tile-img {
   width: 130px;
   border-radius: 5px;
-  margin-right: 10px;
+  margin: auto 10px auto 0;
+  height: fit-content;
+  object-fit: contain;
+}
+.tile-info {
+  width: 100%;
 }
 .tile-info *:not(a){
   padding-bottom: 5px;
   margin-right: 10px;
+}
+.tile-tag {
+  display: inline-block;
 }
 .request-button {
   background: lightseagreen;
@@ -258,6 +271,9 @@ export default {
   padding: 6px 10%;
   font-size: 14px;
   box-shadow: 1px 1px 3px gray;
+  position: absolute;
+  bottom: 10px;
+  right: 0;
 }
 .create-button {
   background: royalblue;
@@ -379,8 +395,17 @@ input.input-img {
   display: block;
   margin: 30px auto;
 }
-strong.tile-tag {
-  color: coral;
+.tile-tag.approved {
+  color: lightseagreen;
+  margin: 0;
+}
+.tile-tag.unapproved {
+  color: crimson;
+  font-weight: bold;
+  margin: 0;
+}
+.tile-uuid {
+  margin-bottom: 30px;
 }
 
 .card-enter-active, .card-move {
@@ -399,5 +424,49 @@ strong.tile-tag {
 }
 .card-leave-to {
   opacity: 0;
+}
+.tile-name-approved-wrap {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+
+@media screen and (max-width: 768px) { 
+  .tile-img {
+    width: 30vw;
+    max-width: 130px;
+  }
+  .right-arrow {
+    width: 20px;
+  }
+  .create-restaurant-info {
+    padding: 10px;
+  }
+  .create-restaurant-info th {
+    font-weight: normal;
+  }
+  .create-restaurant-info td {
+    padding: 5px 0;
+  }
+  .create-restaurant-info * {
+    font-size: 14px !important;
+  }
+  .create-restaurant {
+    margin-bottom: 50px;
+  }
+  .manager__title {
+    margin-top: 20px;
+  }
+  .tile-uuid {
+    font-size: 13px;
+    margin-bottom: 50px;
+  }
+  .to-restaurant-for-manager {
+    padding: 6px 10px;
+  }
+  .request-button {
+    padding: 6px 10px;
+  }
 }
 </style>

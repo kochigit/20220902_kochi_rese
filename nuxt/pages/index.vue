@@ -254,4 +254,37 @@
   transform: translateY(-1px);
   margin-left: 0.5vw;
 }
+
+
+@media screen and (max-width: 768px) { 
+  .restaurant-card {
+    width: 48%;
+    margin-bottom: 10px;
+  }
+  .card-img {
+    height: 25vw;
+  }
+  .card-info {
+    padding: 10px;
+  }
+  .card-name {
+    font-size: 16px;
+    padding-bottom: 5px;
+  }
+  .card-tag {
+    font-size: 12px;
+    padding-bottom: 5px;
+  }
+  .search-bar {
+    position: relative;
+    top: 0;
+    right:0;
+    background: white;
+    box-shadow: 2px 2px 4px rgb(163, 163, 163);
+    border-radius: 5px;
+    padding: 6px 0px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+  }
+}
 </style>

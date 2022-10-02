@@ -16,7 +16,7 @@
           <div class="reservation-info">
             <p class="reservation-id">予約ID：{{qrReservation.id}}</p>
             <p>日付：{{$dayjs(qrReservation.date).format('YYYY/MM/DD')}}</p>
-            <p>時刻：{{qrReservation.time.substr(0, 5).replace(":", "：")}}</p>
+            <p>時刻：{{qrReservation.time.substr(0, 5)}}</p>
             <p>人数：{{qrReservation.number}} 名様</p>
           </div>
           <div class="reservation-user">
@@ -36,7 +36,7 @@
       <div class="edit-restaurant-modal" v-if="isShow" @click.self="toggleEdit">
         <div class="edit-restaurant-img">
           <input type="file" @change="imageSelected" class="update-img">
-          <div class="flex--sb">
+          <div class="flex--sb edit-img">
             <img :src="restaurant.img_path" class="previous-img" />
             <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
             <transition name="fade-in">
@@ -136,12 +136,18 @@
                   </td>
                   <td class="content checkbox">
                     <validation-provider v-slot="{errors}" rules="required">
-                      <input type="checkbox" v-model="sendTo" name="送信先" id="visited" value="visited" class="pointer">
-                      <label for="visited">ご来店済み</label>
-                      <input type="checkbox" v-model="sendTo" name="送信先" id="reserved" value="reserved" class="pointer">
-                      <label for="reserved">ご予約済み（未来店）</label>
-                      <input type="checkbox" v-model="sendTo" name="送信先" id="liked" value="liked" class="pointer">
-                      <label for="liked">お気に入り登録済み</label>
+                      <div>
+                        <input type="checkbox" v-model="sendTo" name="送信先" id="visited" value="visited" class="pointer">
+                        <label for="visited">ご来店済み</label>
+                      </div>
+                      <div>
+                        <input type="checkbox" v-model="sendTo" name="送信先" id="reserved" value="reserved" class="pointer">
+                        <label for="reserved">ご予約済み（未来店）</label>
+                      </div>
+                      <div>
+                        <input type="checkbox" v-model="sendTo" name="送信先" id="liked" value="liked" class="pointer">
+                        <label for="liked">お気に入り登録済み</label>
+                      </div>
                       <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
                     </validation-provider>
                   </td>
@@ -192,7 +198,7 @@
         <div class="reservation-info">
           <p class="reservation-id">予約ID：{{reservation.id}}</p>
           <p>日付：{{$dayjs(reservation.date).format('YYYY/MM/DD')}}</p>
-          <p>時刻：{{reservation.time.substr(0, 5).replace(":", "：")}}</p>
+          <p>時刻：{{reservation.time.substr(0, 5)}}</p>
           <p>人数：{{reservation.number}} 名様</p>
         </div>
         <div class="reservation-user">
@@ -251,7 +257,6 @@
         }
       },
       async imageUpload() {
-        
         const formData = new FormData();
         formData.set('image', this.image);
         formData.set('uuid', this.restaurant.uuid);
@@ -456,7 +461,7 @@
 
 .edit-restaurant-img {
   width: 90%;
-  margin-bottom: 70px;
+  margin-bottom: 50px;
   background: rgba(0, 0, 0, 0.8);
   padding: 20px;
   border-radius: 5px;
@@ -697,6 +702,9 @@
   color: black;
   outline-color: royalblue;
 }
+.content.checkbox span {
+  display: flex;
+}
 .content.checkbox label {
   margin-right: 16px;
   font-size: 15px;
@@ -723,5 +731,86 @@ input.input-img {
   color: lightcoral;
   font-size: 14px;
   margin-top: 2px;
+}
+
+@media screen and (max-width: 768px) { 
+  .reservation-info {
+    margin-right: 20px;
+    font-size: 14px;
+  }
+  .reservation-user {
+    font-size: 14px;
+  }
+  .managed-restaurant-info {
+    font-size: 14px;
+  }
+  .managed-restaurant {
+    flex-wrap: wrap;
+  }
+  .managed-restaurant-img {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .flex--sb {
+    margin-top: 20px;
+  }
+  .reservation-for-manager {
+    padding: 10px;
+  }
+  .right-arrow {
+    width: 20px;
+  }
+  .create-email-content {
+    padding: 10px;
+    font-size: 14px;
+    font-weight: normal;
+  }
+  .create-email-content table td {
+    padding: 5px 0;
+  }
+  .content.checkbox span {
+    display: block;
+  }
+  .content.title input, .content.body textarea {
+    font-size: 14px;
+  }
+  p.visited-at {
+    font-size: 13px;
+    padding-top: 0;
+  }
+  .visited-img {
+    width: 20px !important;
+    padding-bottom: 2px;
+  }
+  .reservation-info {
+    margin-bottom: auto;
+  }
+  .edit-restaurant-img {
+    margin-bottom: 10px;
+    padding: 10px 20px;
+  }
+  .previous-info {
+    display: none;
+  }
+  td.arrow {
+    padding: 0 5px;
+  }
+  .edit-restaurant-info {
+    padding: 10px;
+  }
+  .edit-restaurant-info th {
+    font-size: 14px;
+    font-weight: normal;
+  }
+  .new-info input {
+    font-size: 13px;
+  }
+  .edit-img {
+    margin-top: 10px;
+  }
+  .upload-button {
+    margin-top: 5px;
+  }
 }
 </style>

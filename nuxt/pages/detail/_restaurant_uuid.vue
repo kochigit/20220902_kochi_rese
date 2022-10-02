@@ -116,6 +116,12 @@ export default {
           this.$router.push("/login");
         }
         return;
+      } else if (!this.$auth.user.email_verified_at) {
+        const boo = confirm("予約をするにはメール認証が必要です。\nマイページに移動しますか？");
+        if (boo) {
+          this.$router.push("/mypage");
+        }
+        return;
       }
       const reservation = {
         user_uuid: this.$auth.user.uuid,
@@ -143,19 +149,16 @@ export default {
   position: relative;
   top: -66px;
 }
-
 .restaurant {
   width: 46%;
   text-shadow: 1px 1px 2px rgba(128, 128, 128, 0.6);
 }
-
 .restaurant__top {
   display: flex;
   align-items: center;
   margin-bottom: 25px;
   margin-top: 81px;
 }
-
 .back {
   background: white;
   border: none;
@@ -165,31 +168,25 @@ export default {
   width: 24px;
   height: 24px;
 }
-
 .back-img {
   width: 10px;
   vertical-align: middle;
 }
-
 .restaurant-name {
   font-size: 24px;
 }
-
 .restaurant-img {
   width: 100%;
   margin-bottom: 25px;
 }
-
 .restaurant-tag {
   display: inline-block;
   padding-right: 5px;
   margin-bottom: 25px;
 }
-
 .restaurant-description {
   line-height: 1.4;
 }
-
 .reservation {
   background: #3c53ff;
   color: white;
@@ -200,11 +197,9 @@ export default {
   flex-flow: column;
   justify-content: space-between;
 }
-
 .reservation-form {
   padding: 30px;
 }
-
 .reservation__title {
   font-size: 22px;
   margin-bottom: 30px;
@@ -273,5 +268,37 @@ export default {
 .error--orange {
   color: rgb(255, 217, 0);
   font-size: 14px;
+}
+
+@media screen and (max-width: 768px) { 
+  .restaurant {
+    width: 100%;
+    margin-bottom: 40px;
+  }
+  .reservation {
+    width: 100%;
+  }
+  .restaurant-img {
+    margin-bottom: 15px;
+  }
+  .restaurant-tag {
+    margin-bottom: 10px;
+  }
+  .reservation-form {
+    padding: 15px;
+  }
+  .reservation__title {
+    margin-bottom: 10px;
+  }
+  .confirmation-table {
+    padding: 15px;
+    font-size: 14px;
+  }
+  .confirmation-table td {
+    padding-left: 6vw;
+  }
+  .restaurant-name, .reservation__title {
+    font-size: 20px;
+  }
 }
 </style>

@@ -71,11 +71,11 @@
             <th>申請者</th>
             <td>
               <span class="management__table__name">{{management.user.name}}</span>
-              <span>メール：{{management.user.email}}</span>
+              <span>メール：</span><span>{{management.user.email}}</span>
             </td>
           </tr>
         </table>
-        <div>
+        <div class="unapprove">
           <p class="approved_at">承認日：{{$dayjs(management.approved_at).format('YYYY/M/D')}}</p>
           <button class="unapprove-button" @click="unapprove(management)">承認を取り消す</button>
         </div>
@@ -309,5 +309,30 @@ export default {
   flex-flow: column;
   align-items: flex-end;
   margin-right: 10px;
+}
+
+@media screen and (max-width: 768px) { 
+  .management {
+    flex-wrap: wrap;
+  }
+  .approve-destroy-wrap {
+    flex-flow: row;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+  .management__table__name {
+    display: block;
+    font-size: 16px !important;
+  }
+  .unapprove {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-evenly;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .management__table span {
+    font-size: 13px;
+  }
 }
 </style>

@@ -20,6 +20,11 @@
   justify-content: center;
   align-items: center;
 }
+.flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 .z-0 {
   z-index: 0;
 }

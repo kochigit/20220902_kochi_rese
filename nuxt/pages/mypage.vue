@@ -76,14 +76,14 @@
 
     <div class="mypage__welcome-wrap">
       <h2 class="mypage__welcome">いらっしゃいませ、{{ $auth.user.name }}様</h2>
-        <div v-if="!$auth.user.email_verified_at" class="is-email-verified">
-          <span class="unverified">メールアドレス未認証：</span>
-          <button @click="sendEmailVerification">認証メールを送信</button>
-        </div>
-        <div v-else class="is-email-verified">
-          <span class="verified">メールアドレス認証済</span>
-        </div>
+      <div v-if="!$auth.user.email_verified_at" class="is-email-verified">
+        <span class="unverified">メールアドレス未認証：</span>
+        <button @click="sendEmailVerification">認証メールを送信</button>
       </div>
+      <div v-else class="is-email-verified">
+        <span class="verified">メールアドレス認証済</span>
+      </div>
+    </div>
     <div class="myreservation-and-myfavorite">
       <div class="my-reservation">
 
@@ -678,5 +678,97 @@ h3.visited {
   background: lightseagreen;
   color: inherit;
   box-shadow: 0 0 4px lightgray;
+}
+.card-info {
+    padding: 20px;
+  }
+
+  .card-img {
+    width: 100%;
+    height: 13vw;
+    object-fit: cover;
+    border-radius: 5px 5px 0 0;
+  }
+
+  .card-name {
+    font-size: 18px;
+    padding-bottom: 10px;
+  }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 13px;
+    padding-bottom: 15px;
+  }
+
+  .todetail-and-favorite {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .to-detail {
+    background: #3c53ff;
+    color: white;
+    border-radius: 5px;
+    padding: 6px 10%;
+    font-size: 14px;
+    box-shadow: 1px 1px 3px gray;
+  }
+
+@media screen and (max-width: 768px) { 
+  .myreservation-and-myfavorite {
+    flex-wrap: wrap;
+  }
+  .my-reservation {
+    width: 100%;
+    margin-bottom: 40px;
+  }
+  .my-favorite {
+    width: 100%;
+  }
+  .my-any__title {
+    margin-bottom: 15px;
+  }
+  .my-any__title.visited {
+    margin-top: 30px;
+  }
+  .my-reservation__table {
+    margin-top: 15px;
+    padding: 15px 20px;
+    font-size: 15px;
+  }
+  .table__top {
+    margin-bottom: 5px;
+  }
+  .mypage__welcome-wrap{
+    margin-top: 0;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .mypage__welcome {
+    margin-bottom: 10px;
+    font-size: 16px;
+    width: 100%;
+  }
+  .activate-qr {
+    margin: 5px auto;
+  }
+  .my-reservation__table.edit-table {
+    padding: 10px 15px;
+  }
+  .my-reservation__table.edit-table th{
+    display: none;
+  }
+  .my-reservation__table.edit-table td {
+    padding-left: 0;
+  }
+  .right-arrow {
+    width: 16px;
+    margin: 0 5px;
+  }
+  p.error--orange {
+    width: 40vw;
+  }
 }
 </style>

@@ -4,13 +4,11 @@
       <div class="hamburger__logo" :class="path" @click="openMenu">
         <img src="~assets/img/Hamburger icon 7.svg" class="hamburger-img" />
       </div>
-      <NuxtLink to="/">
-        <h1 class="rese" :class="path">Rese</h1>
-      </NuxtLink>
+      <h1 class="rese pointer" :class="path" @click="openMenu">Rese</h1>
       <transition name="welcome">
-      <p class="welcome" v-if="$auth.loggedIn && ($route.path !== '/mypage')">
-        いらっしゃいませ、{{ $auth.user.name }}様
-      </p>
+        <p class="welcome" v-if="$auth.loggedIn && ($route.path !== '/mypage')">
+          いらっしゃいませ、{{ $auth.user.name }}様
+        </p>
       </transition>
     </div>
     <nav class="slide-menu" :class="isActive">
@@ -212,4 +210,15 @@
     color: coral;
     transition: 1s;
   }
+
+@media screen and (max-width: 768px) { 
+  .welcome {
+    width: max-content;
+    position: absolute;
+    top: 58px;
+  }
+  .hamburger {
+    padding-top: 20px;
+  }
+}
 </style>

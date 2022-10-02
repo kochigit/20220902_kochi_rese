@@ -104,12 +104,13 @@ class RestaurantController extends Controller
             $imageName = $request->image->getClientOriginalName();
             $imgPath = "public/restaurant-img/$request->uuid/";
             if (config('app.env')==='production') {
-                $path = $request->image->storeAs($imgPath, $imageName, 's3');
+                $path = Storage::disk('s3')->putFile($imgPath.$imageName, $request->image, 'public');
                 $imgPath = Storage::disk('s3')->url($path);
             } else {
                 $request->image->storeAs($imgPath, $imageName);
                 $imgPath = config('app.url')."storage/restaurant-img/$request->uuid/$imageName";
             }
+            
                 Restaurant::where('uuid', $request->uuid)->update([
                     'img_path' => $imgPath
                 ]);
