@@ -14,7 +14,6 @@
 export default {
   middleware: 'checkDirectAccessToDone',
   created() {
-    console.log(document.referrer);
   }
 }
 </script>

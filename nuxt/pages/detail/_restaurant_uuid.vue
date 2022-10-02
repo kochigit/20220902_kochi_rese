@@ -19,8 +19,10 @@
     <validation-observer ref="obs" v-slot="ObserverProps" class="reservation">
       <div class="reservation-form">
         <h2 class="reservation__title">予約</h2>
-        <validation-provider v-slot="{ errors }" rules="required">
+        <validation-provider v-slot="{ errors }" rules="required" class="vp">
+          <label for="date">日付：</label>
           <input
+            id="date"
             type="date"
             name="予約日"
             v-model="date"
@@ -29,8 +31,10 @@
           />
           <p class="error--orange" v-if="errors[0]">※{{ errors[0] }}</p>
         </validation-provider>
-        <validation-provider v-slot="{ errors }" rules="required">
+        <validation-provider v-slot="{ errors }" rules="required" class="vp">
+          <label for="time">時刻：</label>
           <input
+            id="time"
             type="time"
             name="予約時刻"
             v-model="time"
@@ -40,9 +44,10 @@
         </validation-provider>
         <validation-provider
           v-slot="{ errors }"
-          rules="required|min_value:1|max_value:20|integer"
-        >
+          rules="required|min_value:1|max_value:20|integer" class="vp">
+          <label for="number">人数：</label>
           <input
+            id="number"
             type="number"
             name="人数"
             v-model="number"
@@ -205,12 +210,17 @@ export default {
   margin-bottom: 30px;
 }
 
-.reservation__input {
+.vp {
   display: block;
+}
+.vp label {
+  vertical-align: middle;
+}
+.reservation__input {
   padding: 3px 10px;
   border: none;
   border-radius: 5px;
-  margin: 12px 0;
+  margin: 5px 0;
   font-size: 14px;
   background: white;
 }
@@ -218,7 +228,7 @@ export default {
   color: gainsboro;
 }
 .w-100 {
-  width: 100%;
+  width: 80%;
   padding: 2px 10px;
 }
 

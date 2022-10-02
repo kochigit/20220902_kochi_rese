@@ -344,7 +344,6 @@
         }
         try {
           const gotData = await this.$axios.post('/v1/evaluation', evaluation);
-          console.log(gotData.data.evaluation);
           rsv.evaluation = gotData.data.evaluation;
         } catch (error) {
           alert(error);

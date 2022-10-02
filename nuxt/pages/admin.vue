@@ -127,7 +127,6 @@ export default {
           user_uuid: management.user.uuid,
         }
         const response = await this.$axios.post('/v1/management/approval', approval);
-        console.log(response.data.management);
         const approved = response.data.management;
         const index = this.managements.findIndex(mng => mng.id === approved.id);
         this.managements.splice(index, 1);
@@ -147,7 +146,6 @@ export default {
           user_uuid: management.user.uuid,
         }
         const response = await this.$axios.post('/v1/management/unapproval', approval);
-        console.log(response.data.management);
         const unapproved = response.data.management;
         const index = this.approved.findIndex(mng => mng.id === unapproved.id);
         this.approved.splice(index, 1);
@@ -163,7 +161,6 @@ export default {
       }
       try {
         const response = await this.$axios.delete(`/v1/management/${management.id}`);
-        console.log(response);
         const deleted = response.data.management
         const index = this.managements.findIndex(mng => mng.id === deleted.id);
         this.managements.splice(index, 1);

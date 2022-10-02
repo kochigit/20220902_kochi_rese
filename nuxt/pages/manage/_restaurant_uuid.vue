@@ -308,16 +308,22 @@
         } catch (error) {
           if (error.name === 'NotAllowedError') {
             // user denied camera access permisson
+            alert('カメラの仕様が拒否されました');
           } else if (error.name === 'NotFoundError') {
             // no suitable camera device installed
+            alert('カメラが見つかりません');
           } else if (error.name === 'NotSupportedError') {
             // page is not served over HTTPS (or localhost)
+            alert('この機能はlocalhostかHTTPSでしか利用できません。\nこの模擬案件でHTTPSは用意できませんので、local環境で機能の評価を行って頂ければ幸いです。');
           } else if (error.name === 'NotReadableError') {
             // maybe camera is already in use
+            alert('おそらくカメラが他のアプリで使用中です');
           } else if (error.name === 'OverconstrainedError') {
             // passed constraints don't match any camera. Did you requested the front camera although there is none?
+            alert('指定したカメラが見つかりません');
           } else {
             // browser is probably lacking features (WebRTC, Canvas)
+            alert('ご利用のブラウザ環境ではこの機能はご利用できません。')
           }
         } finally {
           // hide loading indicator
