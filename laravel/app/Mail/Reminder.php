@@ -32,7 +32,6 @@ class Reminder extends Mailable
     {
         return $this
         ->subject('本日は予約日です')
-        ->from('rese.reminder@example.com')
         ->with(['reservation' => $this->reservation])
         ->view('email.reminder');
     }

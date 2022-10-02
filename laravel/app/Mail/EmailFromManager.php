@@ -24,7 +24,6 @@ class EmailFromManager extends Mailable
     {
         return $this
         ->subject($this->request->title)
-        ->from('rese.restaurant@example.com')
         ->with(['content' => $this->request->body])
         ->view('email.from-manager');
         // Hashだけでは「/」が文字列に入る可能性がありURLに挿入するには不適切なため、base64encodeする。

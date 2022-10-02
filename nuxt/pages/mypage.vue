@@ -680,40 +680,40 @@ h3.visited {
   box-shadow: 0 0 4px lightgray;
 }
 .card-info {
-    padding: 20px;
-  }
+  padding: 20px;
+}
 
-  .card-img {
-    width: 100%;
-    height: 13vw;
-    object-fit: cover;
-    border-radius: 5px 5px 0 0;
-  }
+.card-img {
+  width: 100%;
+  height: 13vw;
+  object-fit: cover;
+  border-radius: 5px 5px 0 0;
+}
 
-  .card-name {
-    font-size: 18px;
-    padding-bottom: 10px;
-  }
+.card-name {
+  font-size: 18px;
+  padding-bottom: 10px;
+}
 
-  .card-tag {
-    display: inline-block;
-    font-size: 13px;
-    padding-bottom: 15px;
-  }
+.card-tag {
+  display: inline-block;
+  font-size: 13px;
+  padding-bottom: 15px;
+}
 
-  .todetail-and-favorite {
-    display: flex;
-    justify-content: space-between;
-  }
+.todetail-and-favorite {
+  display: flex;
+  justify-content: space-between;
+}
 
-  .to-detail {
-    background: #3c53ff;
-    color: white;
-    border-radius: 5px;
-    padding: 6px 10%;
-    font-size: 14px;
-    box-shadow: 1px 1px 3px gray;
-  }
+.to-detail {
+  background: #3c53ff;
+  color: white;
+  border-radius: 5px;
+  padding: 6px 10%;
+  font-size: 14px;
+  box-shadow: 1px 1px 3px gray;
+}
 
 @media screen and (max-width: 768px) { 
   .myreservation-and-myfavorite {
@@ -769,6 +769,24 @@ h3.visited {
   }
   p.error--orange {
     width: 40vw;
+  }
+  .restaurant-card {
+    width: 48%;
+    margin-bottom: 10px;
+  }
+  .card-img {
+    height: 25vw;
+  }
+  .card-info {
+    padding: 10px;
+  }
+  .card-name {
+    font-size: 16px;
+    padding-bottom: 5px;
+  }
+  .card-tag {
+    font-size: 12px;
+    padding-bottom: 5px;
   }
 }
 </style>

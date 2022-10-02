@@ -10,7 +10,7 @@
             <div class="tile-name-approved-wrap">
               <h3 class="tile-name">{{ management.restaurant.name }}</h3>
               <span class="tile-tag approved" v-if="management.approved_at">承認済み</span>
-              <span class="tile-tag unapproved" v-else>※未承認</span>
+              <span class="tile-tag unapproved" v-else>未承認</span>
             </div>
             <span class="tile-tag">#{{ management.restaurant.area }}</span>
             <span class="tile-tag">#{{ management.restaurant.genre }}</span>
@@ -398,11 +398,18 @@ input.input-img {
 .tile-tag.approved {
   color: lightseagreen;
   margin: 0;
+  font-size: 12px;
+  border: lightseagreen 1px solid;
+  padding: 4px 10px 3px;
+  border-radius: 20px;
 }
 .tile-tag.unapproved {
   color: crimson;
-  font-weight: bold;
   margin: 0;
+  font-size: 12px;
+  border: crimson 1px dashed;
+  padding: 4px 10px 3px;
+  border-radius: 20px;
 }
 .tile-uuid {
   margin-bottom: 30px;

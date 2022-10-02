@@ -24,7 +24,6 @@ class EmailVerification extends Mailable
     {
         return $this
         ->subject('メールアドレスの認証をお願いいたします')
-        ->from('rese@example.com')
         ->with(['hashedEmail' => base64_encode(Hash::make($this->user->email.$this->user->salt_for_email))])
         ->view('email.verification');
         // Hashだけでは「/」が文字列に入る可能性がありURLに挿入するには不適切なため、base64encodeする。

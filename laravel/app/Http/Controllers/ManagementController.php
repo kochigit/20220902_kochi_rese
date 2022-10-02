@@ -45,10 +45,11 @@ class ManagementController extends Controller
         } 
         $isManager = Management::where([
                 ['user_uuid', $manager->uuid],
-                ['restaurant_uuid', $request->restaurant_uuid]
+                ['restaurant_uuid', $request->restaurant_uuid],
+                ['approved_at', '!=', null]
             ])->exists();
         if ($isManager) {
-            return response()->json(compact('isManager'),200);
+            return response()->json(compact('isManager'), 200);
         } else {
             return response()->json([
                 'message' => '権限がありません'

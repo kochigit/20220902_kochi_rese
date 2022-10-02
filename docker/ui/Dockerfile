@@ -1,4 +1,3 @@
-# 軽量らしいのでOSは、Alpine Linuxを選択
 # https://hub.docker.com/_/node/
 FROM node:16-alpine
 
