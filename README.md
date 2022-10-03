@@ -62,6 +62,18 @@
 - Nuxtデプロイ先：AWS EC2（NuxtはHerokuで良いかなと思ったが、HerokuのNuxtからはHTTPのAPIを叩けなかったため、NuxtもEC2にデプロイ。）
 - MySQLデプロイ先：AWS RDS
 - ストレージ：AWS S3 （後述：最後までお読みいただけますでしょうか）
+- メールサーバー：gmail
+
+## .envファイルによる環境切り分け
+- 環境切り分けは.envによって行っています。見せられない情報を削除して、末尾に.exampleを付与してgit内に共有させていただきます。
+- local環境は.env.local.example、localのdocker環境は.env.docker.example、本番環境は.env.production.exampleとなっております。
+- laravel,nuxtそれぞれに.envがあります。nuxtには.envを扱えるモジュールを入れています。
+- 環境によって主に変わるのは、URL、database、mail系です。
+- docker環境を構築する際は、git cloneした後に、laravelディレクトリでComposer install --ignore-platform-reqs、nuxtディレクトリでyarn installしてからdocker-compose up --buildすると上手くいきます。（正直仮想コンテナ内でやるべきことなのになぜかbuild,up時に実行されない。意味不明。localにcomposerやyarnがない人やバージョンが合わない人のためのdockerなのに。これが僕の現状のdockerのウデマエです。。今後はDockerfileをいじくりまわしてコンテナ内でできるようにしていきたい。）
+
+
+#### Laravel
+
 
 ## テーブル設計
 - テーブルが多く冗長になるので、別途スプレッドシートの「テーブル仕様書」をご確認ください。

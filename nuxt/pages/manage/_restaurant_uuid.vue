@@ -3,7 +3,7 @@
     <transition name="fade">
       <div class="qr-reader" v-if="qrActive" @click.self="qrActive=!qrActive">
         <div class="camera">
-          <qrcode-stream :paused="paused" @decode="onDecode" @init="onInit"/>
+          <qrcode-stream :paused="paused" @decode="onDecode" @init="onInit" />
         </div>
       </div>
     </transition>
@@ -11,7 +11,8 @@
     <transition name="fade">
       <div class="qrReservation-modal" v-if="qrReservation" @click.self="closeQrModal">
         <div class="qrReservation reservation-for-manager" :class="qrReservation.visited_at ? 'visited': null">
-          <img src="~assets/img/checkbox-marked-circle-plus-outline.svg" class="check-img pointer" @click="makeReservationVisited(qrReservation.id)" v-if="!qrReservation.visited_at">
+          <img src="~assets/img/checkbox-marked-circle-plus-outline.svg" class="check-img pointer"
+            @click="makeReservationVisited(qrReservation.id)" v-if="!qrReservation.visited_at">
           <span class="check--hover">ご来店済みにする</span>
           <div class="reservation-info">
             <p class="reservation-id">予約ID：{{qrReservation.id}}</p>
@@ -21,9 +22,9 @@
           </div>
           <div class="reservation-user">
             <p v-if="qrReservation.visited_at" class="visited-at">
-            <img src="~assets/img/checkbox-marked-circle.svg" class="visited-img">
-            {{$dayjs(qrReservation.visited_at).format('YYYY/M/D HH:mm')}} ご来店済み
-          </p>
+              <img src="~assets/img/checkbox-marked-circle.svg" class="visited-img">
+              {{$dayjs(qrReservation.visited_at).format('YYYY/M/D HH:mm')}} ご来店済み
+            </p>
             <p>お名前：{{qrReservation.user.name}}</p>
             <p>メール：{{qrReservation.user.email}}</p>
             <p>ユーザーID：{{qrReservation.user.uuid}}</p>
@@ -48,10 +49,11 @@
                   <img :src="url">
                 </div>
               </transition>
-                <div v-if="!url" class="no-preview">
-                </div>
+              <div v-if="!url" class="no-preview">
+              </div>
             </div>
-            <button @click="imageUpload" class="upload-button" :disabled="!image || ObserverProps.invalid || !ObserverProps.validated">画像を変更する</button>
+            <button @click="imageUpload" class="upload-button"
+              :disabled="!image || ObserverProps.invalid || !ObserverProps.validated">画像を変更する</button>
           </validation-observer>
         </div>
         <div class="edit-restaurant-info">
@@ -112,12 +114,12 @@
     <div class="flex--sb">
       <h2 class="manage__title">店舗情報</h2>
       <span class="edit-restaurant pointer" @click="toggleEdit">
-        <img src="~assets/img/iconmonstr-pencil-8-black.svg" class="edit-img pointer"/>
+        <img src="~assets/img/iconmonstr-pencil-8-black.svg" class="edit-img pointer" />
         編集
       </span>
     </div>
     <div class="managed-restaurant">
-      <img :src="restaurant.img_path" class="managed-restaurant-img"/>
+      <img :src="restaurant.img_path" class="managed-restaurant-img" />
       <div class="managed-restaurant-info">
         <p class="managed-restaurant-uuid">店舗ID：{{restaurant.uuid}}</p>
         <p class="managed-restaurant-name">店舗名：{{ restaurant.name }}</p>
@@ -146,7 +148,8 @@
                         <label for="visited">ご来店済み</label>
                       </div>
                       <div>
-                        <input type="checkbox" v-model="sendTo" name="送信先" id="reserved" value="reserved" class="pointer">
+                        <input type="checkbox" v-model="sendTo" name="送信先" id="reserved" value="reserved"
+                          class="pointer">
                         <label for="reserved">ご予約済み（未来店）</label>
                       </div>
                       <div>
@@ -182,7 +185,8 @@
                   </td>
                 </tr>
               </table>
-              <button @click="sendEmails" class="email-button" :disabled="ObserverProps.invalid || !ObserverProps.validated">メールを送信する</button>
+              <button @click="sendEmails" class="email-button"
+                :disabled="ObserverProps.invalid || !ObserverProps.validated">メールを送信する</button>
             </validation-observer>
           </div>
         </div>
@@ -197,8 +201,10 @@
           QR
         </span>
       </div>
-      <div class="reservation-for-manager" v-for="reservation in reservations" :key="reservation.id" :class="reservation.visited_at ? 'visited': null">
-        <img src="~assets/img/checkbox-marked-circle-plus-outline.svg" class="check-img pointer" @click="makeReservationVisited(reservation.id)" v-if="!reservation.visited_at">
+      <div class="reservation-for-manager" v-for="reservation in reservations" :key="reservation.id"
+        :class="reservation.visited_at ? 'visited': null">
+        <img src="~assets/img/checkbox-marked-circle-plus-outline.svg" class="check-img pointer"
+          @click="makeReservationVisited(reservation.id)" v-if="!reservation.visited_at">
         <span class="check--hover">手動でご来店済みにする</span>
         <div class="reservation-info">
           <p class="reservation-id">予約ID：{{reservation.id}}</p>
@@ -241,14 +247,16 @@
         sendTo: [],
         title: null,
         body: null,
-        
+
       }
     },
     methods: {
       async getManagedRestaurant() {
-        const gotData = await this.$axios.get(`/v1/management/managedRestaurant/${this.$route.params.restaurant_uuid}`);
+        const gotData = await this.$axios.get(
+          `/v1/management/managedRestaurant/${this.$route.params.restaurant_uuid}`);
         this.restaurant = gotData.data.restaurant;
-        this.reservations = gotData.data.restaurant.reservations.sort((a, b) => (a.time < b.time) ? -1 : 1).sort((a, b) => (a.date < b.date) ? -1 : 1);
+        this.reservations = gotData.data.restaurant.reservations.sort((a, b) => (a.time < b.time) ? -1 : 1).sort((a,
+          b) => (a.date < b.date) ? -1 : 1);
       },
       toggleEdit() {
         this.isShow = !this.isShow;
@@ -306,7 +314,7 @@
           alert(error);
         }
       },
-      async onInit (promise) {
+      async onInit(promise) {
         // show loading indicator
         try {
           await promise
@@ -329,14 +337,16 @@
             alert('指定したカメラが見つかりません');
           } else {
             // browser is probably lacking features (WebRTC, Canvas)
-            alert('ご利用のブラウザ環境ではこの機能はご利用できません。\nこの機能はlocalhostかHTTPSでしか利用できません。\nこの模擬案件のAWS環境ではHTTPSは用意できませんので、local環境で機能の評価を行って頂ければ幸いです。')
+            alert(
+              'ご利用のブラウザ環境ではこの機能はご利用できません。\nこの機能はlocalhostかHTTPSでしか利用できません。\nこの模擬案件のAWS環境ではHTTPSは用意できませんので、local環境で機能の評価を行って頂ければ幸いです。'
+              )
           }
         } finally {
           // hide loading indicator
           this.qrReservation = null;
         }
       },
-      onDecode(qrData){
+      onDecode(qrData) {
         this.paused = true;
         const qrReservation = JSON.parse(qrData);
         this.qrActive = false;
@@ -398,436 +408,512 @@
 </script>
 
 <style>
-.flex--sb{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.manage__title {
-  font-size: 18px;
-}
-.edit-restaurant {
-  color: gray;
-}
-.managed-restaurant {
-  display: flex;
-  background: white;
-  align-items: center;
-  padding: 5px 10px;
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px lightgray;
-  margin-bottom: 50px;
-}
-.managed-restaurant-img {
-  width: 30%;
-  height: fit-content;
-  object-fit: contain;
-  margin-right: 10px;
-  border-radius: 3px;
-}
-.managed-restaurant-info p{
-  padding: 3px 0;
-  line-height: 1.3;
-}
-
-.reservation-for-manager {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  background: rgb(255, 113, 62);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  box-shadow: 2px 2px 5px rgb(177, 177, 177);
-  position: relative;
-}
-.reservation-for-manager p {
-  padding: 5px 0;
-}
-.reservation-id {
-  text-decoration-line: underline;
-  text-underline-offset: 2px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.edit-restaurant-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  color: white;
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 20;
-}
-.right-arrow {
-  width: 30px;
-  vertical-align: middle;
-}
-
-.edit-restaurant-img {
-  width: 90%;
-  margin-bottom: 50px;
-  background: rgba(0, 0, 0, 0.8);
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 7px gainsboro;
-}
-.previous-img {
-  width: 40%;
-  max-height: 300px;
-  object-fit: contain;
-}
-.update-img {
-  font-size: 14px;
-  display: block;
-  margin: 0 0 10px auto;
-}
-.upload-button {
-  display: block;
-  margin: 20px auto 0;
-  border: none;
-  background: rgb(255, 113, 62);
-  color: white;
-  border-radius: 5px;
-  font-size: 15px;
-  padding: 5px 10px;
-  box-shadow: 0 0 5px gainsboro;
-}
-.edit-restaurant-info {
-  width: 90%;
-  background: rgba(0, 0, 0, 0.8);
-  border-radius: 5px;
-  padding: 15px 20px 20px;
-  box-shadow: 0 0 7px gainsboro;
-}
-.edit-restaurant-info th {
-  width: 15%;
-  text-align: left;
-}
-.previous-info {
-  width: 40%;
-  padding: 5px 0;
-}
-.new-info {
-  width: 40%;
-  padding: 5px 0;
-}
-.arrow {
-  width: 1%;
-  padding: 0 10px;
-}
-.edit-restaurant-info table * {
-  vertical-align: middle;
-  line-height: 1.2;
-}
-
-.new-info input {
-  border: none;
-  border-radius: 5px;
-  padding: 3px 5px;
-  font-size: 15px;
-  width: 100%;
-  background: whitesmoke;
-}
-.new-info textarea {
-  border: none;
-  border-radius: 5px;
-  resize: none;
-  width: 100%;
-  background: whitesmoke;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.7s;
-}
-.fade-enter, .fade-leave-to{
-  opacity: 0;
-}
-
-.fade-in-enter-active {
-  transition: opacity 0.7s;
-}
-.fade-in-enter{
-  opacity: 0;
-}
-.fade-in-leave-active {
-  display: none;
-}
-
-.preview {
-  width: 40%;
-}
-.preview img {
-  width: 100%;
-}
-.no-preview {
-  width: 40%;
-}
-
-.qrReservation-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  color: white;
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 20;
-}
-.qrReservation {
-  background: coral;
-  width: 90%;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 8px gainsboro;
-  position: relative;
-}
-.check-img {
-  width: 30px;
-  position: absolute;
-  top: 15px;
-  right: 20px;
-}
-.check--hover {
-  font-size: 12px;
-  border: white 1px dashed;
-  position: absolute;
-  padding: 3px 5px 3px 6px;
-  border-radius: 10px 10px 0 10px;
-  top: 0;
-  right: 0;
-  transform: translate(-53px, 3px);
-  opacity: 0;
-  transition: 0.3s;
-}
-.check-img:hover+.check--hover {
-  opacity: 1;
-  transition: 0.3s;
-}
-
-.visited-img, .scan-img {
-  width: 26px;
-}
-.reservation-for-manager.visited {
-  background: rgb(24, 158, 151);
-}
-.visited-at {
-  text-align: right;
-  line-height: 23px;
-}
-.reservation-info {
-  width: 30%;
-}
-.reservation-user {
-  width: 70%;
-}
-.scan {
-  color: gray;
-  line-height: 23px;
-}
-.qr-reader {
-  position: fixed;
-  background: rgba(0, 0, 0, 0.9);
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 20;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.camera {
-  width: 70%;
-}
-
-.emailing {
-  margin-bottom: 50px;
-}
-.email-button {
-  background: royalblue;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 6px 10%;
-  font-size: 15px;
-  box-shadow: 1px 1px 3px gray;
-  display: block;
-  margin: 0 auto;
-}
-.send-email-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  color: white;
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 20;
-}
-.create-email-content {
-  width: 90%;
-  background: rgba(0, 0, 0, 0.8);
-  border-radius: 5px;
-  padding: 20px 30px 30px;
-  box-shadow: 0 0 7px gainsboro;
-}
-.create-email-content table {
-  margin-bottom: 20px;
-}
-.create-email-content th {
-  width: 10%;
-  text-align: left;
-}
-.content {
-  width: 70%;
-  padding: 5px 0;
-}
-.arrow {
-  width: 1%;
-  padding-right: 20px;
-}
-.create-email-content table * {
-  vertical-align: middle;
-  line-height: 1.2;
-}
-.content.title input {
-  border: none;
-  border-radius: 5px;
-  padding: 5px 5px;
-  font-size: 15px;
-  width: 100%;
-  background: whitesmoke;
-  color: black;
-  outline-color: royalblue;
-}
-.content.checkbox span {
-  display: flex;
-  flex-wrap: wrap;
-}
-.content.checkbox label {
-  margin-right: 16px;
-  font-size: 15px;
-  cursor: pointer;
-}
-.content.checkbox input:checked + label {
-  color: lightskyblue;
-  font-weight: bold;
-}
-input.input-img {
-  font-size: 13px;
-}
-.content textarea {
-  border: none;
-  border-radius: 5px;
-  resize: none;
-  width: 100%;
-  font-size: 15px;
-  padding: 5px 5px;
-  background: whitesmoke;
-  outline-color: royalblue;
-}
-.error--lightcoral {
-  color: lightcoral;
-  font-size: 14px;
-  margin-top: 2px;
-  text-align: right;
-}
-
-@media screen and (max-width: 768px) { 
-  .reservation-info {
-    margin-right: 20px;
-    font-size: 14px;
-  }
-  .reservation-user {
-    font-size: 14px;
-  }
-  .managed-restaurant-info {
-    font-size: 14px;
-  }
-  .managed-restaurant {
-    flex-wrap: wrap;
-  }
-  .managed-restaurant-img {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-  }
   .flex--sb {
-    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
   }
+
+  .manage__title {
+    font-size: 18px;
+  }
+
+  .edit-restaurant {
+    color: gray;
+  }
+
+  .managed-restaurant {
+    display: flex;
+    background: white;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px lightgray;
+    margin-bottom: 50px;
+  }
+
+  .managed-restaurant-img {
+    width: 30%;
+    height: fit-content;
+    object-fit: contain;
+    margin-right: 10px;
+    border-radius: 3px;
+  }
+
+  .managed-restaurant-info p {
+    padding: 3px 0;
+    line-height: 1.3;
+  }
+
   .reservation-for-manager {
-    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    background: rgb(255, 113, 62);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 2px 2px 5px rgb(177, 177, 177);
+    position: relative;
   }
-  .right-arrow {
-    width: 20px;
-  }
-  .create-email-content {
-    padding: 10px;
-    font-size: 14px;
-    font-weight: normal;
-  }
-  .create-email-content table td {
+
+  .reservation-for-manager p {
     padding: 5px 0;
   }
-  .content.checkbox span {
-    display: block;
-  }
-  .content.title input, .content.body textarea {
-    font-size: 14px;
-  }
-  p.visited-at {
-    font-size: 13px;
-    padding-top: 0;
-  }
-  .visited-img {
-    width: 20px !important;
-    padding-bottom: 2px;
-  }
-  .reservation-info {
-    margin-bottom: auto;
-  }
-  .edit-restaurant-img {
+
+  .reservation-id {
+    text-decoration-line: underline;
+    text-underline-offset: 2px;
+    font-weight: bold;
     margin-bottom: 10px;
-    padding: 10px 20px;
   }
+
+  .edit-restaurant-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+  }
+
+  .right-arrow {
+    width: 30px;
+    vertical-align: middle;
+  }
+
+  .edit-restaurant-img {
+    width: 90%;
+    margin-bottom: 50px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 7px gainsboro;
+  }
+
+  .previous-img {
+    width: 40%;
+    max-height: 300px;
+    object-fit: contain;
+  }
+
+  .update-img {
+    font-size: 14px;
+    display: block;
+    margin: 0 0 10px auto;
+  }
+
+  .upload-button {
+    display: block;
+    margin: 20px auto 0;
+    border: none;
+    background: rgb(255, 113, 62);
+    color: white;
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 5px 10px;
+    box-shadow: 0 0 5px gainsboro;
+  }
+
+  .edit-restaurant-info {
+    width: 90%;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    padding: 15px 20px 20px;
+    box-shadow: 0 0 7px gainsboro;
+  }
+
+  .edit-restaurant-info th {
+    width: 15%;
+    text-align: left;
+  }
+
   .previous-info {
+    width: 40%;
+    padding: 5px 0;
+  }
+
+  .new-info {
+    width: 40%;
+    padding: 5px 0;
+  }
+
+  .arrow {
+    width: 1%;
+    padding: 0 10px;
+  }
+
+  .edit-restaurant-info table * {
+    vertical-align: middle;
+    line-height: 1.2;
+  }
+
+  .new-info input {
+    border: none;
+    border-radius: 5px;
+    padding: 3px 5px;
+    font-size: 15px;
+    width: 100%;
+    background: whitesmoke;
+  }
+
+  .new-info textarea {
+    border: none;
+    border-radius: 5px;
+    resize: none;
+    width: 100%;
+    background: whitesmoke;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.7s;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+  .fade-in-enter-active {
+    transition: opacity 0.7s;
+  }
+
+  .fade-in-enter {
+    opacity: 0;
+  }
+
+  .fade-in-leave-active {
     display: none;
   }
-  td.arrow {
-    padding: 0 5px;
+
+  .preview {
+    width: 40%;
   }
-  .edit-restaurant-info {
-    padding: 10px;
+
+  .preview img {
+    width: 100%;
   }
-  .edit-restaurant-info th {
-    font-size: 14px;
-    font-weight: normal;
+
+  .no-preview {
+    width: 40%;
   }
-  .new-info input {
+
+  .qrReservation-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+  }
+
+  .qrReservation {
+    background: coral;
+    width: 90%;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 8px gainsboro;
+    position: relative;
+  }
+
+  .check-img {
+    width: 30px;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+  }
+
+  .check--hover {
+    font-size: 12px;
+    border: white 1px dashed;
+    position: absolute;
+    padding: 3px 5px 3px 6px;
+    border-radius: 10px 10px 0 10px;
+    top: 0;
+    right: 0;
+    transform: translate(-53px, 3px);
+    opacity: 0;
+    transition: 0.3s;
+  }
+
+  .check-img:hover+.check--hover {
+    opacity: 1;
+    transition: 0.3s;
+  }
+
+  .visited-img,
+  .scan-img {
+    width: 26px;
+  }
+
+  .reservation-for-manager.visited {
+    background: rgb(24, 158, 151);
+  }
+
+  .visited-at {
+    text-align: right;
+    line-height: 23px;
+  }
+
+  .reservation-info {
+    width: 30%;
+  }
+
+  .reservation-user {
+    width: 70%;
+  }
+
+  .scan {
+    color: gray;
+    line-height: 23px;
+  }
+
+  .qr-reader {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.9);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .camera {
+    width: 70%;
+  }
+
+  .emailing {
+    margin-bottom: 50px;
+  }
+
+  .email-button {
+    background: royalblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 10%;
+    font-size: 15px;
+    box-shadow: 1px 1px 3px gray;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .send-email-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+  }
+
+  .create-email-content {
+    width: 90%;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    padding: 20px 30px 30px;
+    box-shadow: 0 0 7px gainsboro;
+  }
+
+  .create-email-content table {
+    margin-bottom: 20px;
+  }
+
+  .create-email-content th {
+    width: 10%;
+    text-align: left;
+  }
+
+  .content {
+    width: 70%;
+    padding: 5px 0;
+  }
+
+  .arrow {
+    width: 1%;
+    padding-right: 20px;
+  }
+
+  .create-email-content table * {
+    vertical-align: middle;
+    line-height: 1.2;
+  }
+
+  .content.title input {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 5px;
+    font-size: 15px;
+    width: 100%;
+    background: whitesmoke;
+    color: black;
+    outline-color: royalblue;
+  }
+
+  .content.checkbox span {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .content.checkbox label {
+    margin-right: 16px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .content.checkbox input:checked+label {
+    color: lightskyblue;
+    font-weight: bold;
+  }
+
+  input.input-img {
     font-size: 13px;
   }
-  .edit-img {
-    margin-top: 10px;
+
+  .content textarea {
+    border: none;
+    border-radius: 5px;
+    resize: none;
+    width: 100%;
+    font-size: 15px;
+    padding: 5px 5px;
+    background: whitesmoke;
+    outline-color: royalblue;
   }
-  .upload-button {
-    margin-top: 5px;
+
+  .error--lightcoral {
+    color: lightcoral;
+    font-size: 14px;
+    margin-top: 2px;
+    text-align: right;
   }
-}
+
+  @media screen and (max-width: 768px) {
+    .reservation-info {
+      margin-right: 20px;
+      font-size: 14px;
+    }
+
+    .reservation-user {
+      font-size: 14px;
+    }
+
+    .managed-restaurant-info {
+      font-size: 14px;
+    }
+
+    .managed-restaurant {
+      flex-wrap: wrap;
+    }
+
+    .managed-restaurant-img {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .flex--sb {
+      margin-top: 20px;
+    }
+
+    .reservation-for-manager {
+      padding: 10px;
+    }
+
+    .right-arrow {
+      width: 20px;
+    }
+
+    .create-email-content {
+      padding: 10px;
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    .create-email-content table td {
+      padding: 5px 0;
+    }
+
+    .content.checkbox span {
+      display: block;
+    }
+
+    .content.title input,
+    .content.body textarea {
+      font-size: 14px;
+    }
+
+    p.visited-at {
+      font-size: 13px;
+      padding-top: 0;
+    }
+
+    .visited-img {
+      width: 20px !important;
+      padding-bottom: 2px;
+    }
+
+    .reservation-info {
+      margin-bottom: auto;
+    }
+
+    .edit-restaurant-img {
+      margin-bottom: 10px;
+      padding: 10px 20px;
+    }
+
+    .previous-info {
+      display: none;
+    }
+
+    td.arrow {
+      padding: 0 5px;
+    }
+
+    .edit-restaurant-info {
+      padding: 10px;
+    }
+
+    .edit-restaurant-info th {
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    .new-info input {
+      font-size: 13px;
+    }
+
+    .edit-img {
+      margin-top: 10px;
+    }
+
+    .upload-button {
+      margin-top: 5px;
+    }
+  }
+
 </style>
