@@ -69,10 +69,9 @@
 - local環境は.env.local.example、localのdocker環境は.env.docker.example、本番環境は.env.production.exampleとなっております。
 - laravel,nuxtそれぞれに.envがあります。nuxtには.envを扱えるモジュールを入れています。
 - 環境によって主に変わるのは、URL、database、mail系です。
+- メールはlocalではMailtrap、dockerではMailhog、本番ではgmailを利用しています。
 - docker環境を構築する際は、git cloneした後に、laravelディレクトリでComposer install --ignore-platform-reqs、nuxtディレクトリでyarn installしてからdocker-compose up --buildすると上手くいきます。（正直仮想コンテナ内でやるべきことなのになぜかbuild,up時に実行されない。意味不明。localにcomposerやyarnがない人やバージョンが合わない人のためのdockerなのに。これが僕の現状のdockerのウデマエです。。今後はDockerfileをいじくりまわしてコンテナ内でできるようにしていきたい。）
 
-
-#### Laravel
 
 
 ## テーブル設計
