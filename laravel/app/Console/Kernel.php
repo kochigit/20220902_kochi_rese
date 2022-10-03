@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('email:reminders')->dailyAt('08:00');
-        $schedule->command('email:reminders')->everyTeninutes(); //採点用、毎朝8時に送られてくるのでは採点しずらいと思うので、10分ごとに送るようにする。
+        $schedule->command('email:reminders')->everyTenMinutes(); //採点用、毎朝8時に送られてくるのでは採点しずらいと思うので、10分ごとに送るようにする。
     }
 
     /**
