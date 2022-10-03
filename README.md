@@ -41,7 +41,7 @@
 - 店舗代表者による予約のご来店済みフラグ追加
 - 店舗代表者によるQRコードリーダーを利用した予約の確認とご来店済みフラグ追加（HTTP環境下ではリーダー起動ができないので、この機能はlocalで評価して頂けると幸いです。）
 - 店舗代表者による3種のセグメントのユーザーへのメール送信
-- Amazon LinuxのcronとLaravelのタスクスケジューラを利用した予約日のリマインダーメール送信（本番環境は評価しやすいように30分に1回送信する設定。）
+- Amazon LinuxのcronとLaravelのタスクスケジューラを利用した予約日のリマインダーメール送信（本番環境は評価しやすいように10分に1回送信する設定。）
 - レスポンシブデザイン
 
 
@@ -70,7 +70,7 @@
 - laravel,nuxtそれぞれに.envがあります。nuxtには.envを扱えるモジュールを入れています。
 - 環境によって主に変わるのは、URL、database、mail系です。
 - メールはlocalではMailtrap、dockerではMailhog、本番ではgmailを利用しています。
-- docker環境を構築する際は、git cloneした後に、laravelディレクトリでComposer install --ignore-platform-reqs、nuxtディレクトリでyarn installしてからdocker-compose up --buildすると上手くいきます。（正直仮想コンテナ内でやるべきことなのになぜかbuild,up時に実行されない。意味不明。localにcomposerやyarnがない人やバージョンが合わない人のためのdockerなのに。これが僕の現状のdockerのウデマエです。。今後はDockerfileをいじくりまわしてコンテナ内でできるようにしていきたい。）
+- docker環境を構築する際は、git cloneした後に、laravelディレクトリでComposer install --ignore-platform-reqs、nuxtディレクトリでyarn installしてからdocker-compose up --buildすると上手くいきます。（正直仮想コンテナ内でやるべきことなのになぜかbuild,up時に実行されない。localにcomposerやyarnがない人やバージョンが合わない人のためのdockerなのに。これが私の現状のdockerのウデマエです。。今後はDockerfileをいじくりまわしてコンテナ内でできるようにしていきたい。）
 
 
 
