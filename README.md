@@ -2,6 +2,7 @@
 - お客様（ユーザー）が飲食店の検索、お気に入り、予約、予約変更、口コミなどをすることができる。
 - 管理者（Administrator、seed時に作成）はManager（店舗代表者）の作成、management（店舗代表者登録申請）の承認、承認取り消し、削除ができる。
 - 店舗代表者（Manager）は店舗代表者登録申請、新規店舗作成、管理者承認後は店舗情報の更新、メール送信、予約の確認、予約をご来店済みにすることができる。
+![indexページ](https://user-images.githubusercontent.com/104754786/193504561-7348fb59-096e-48a4-9ab9-e8db9180b76d.png)
 
 
 ## 作成した目的
@@ -59,6 +60,19 @@
 - テーブルが多く冗長になるので、別途スプレッドシートの「テーブル仕様書」をご確認ください。
 
 ## ER図
+![ER drawio](https://user-images.githubusercontent.com/104754786/193504507-24e09937-110d-4ffe-b5a3-5daa8960e9fc.png)
 
 
 ## 他に記載することがあれば記述する
+![adminページ](https://user-images.githubusercontent.com/104754786/193504593-bb5e1cdc-8b01-4953-b109-da2f802c6380.png)
+
+
+
+![managerページ](https://user-images.githubusercontent.com/104754786/193504624-304002d7-b8f6-4e26-b9b7-717dfffcb173.png)
+
+
+![manageページ](https://user-images.githubusercontent.com/104754786/193504647-ab54c596-5597-41e8-989d-c4c33b20478c.png)
+
+![mypage](https://user-images.githubusercontent.com/104754786/193504655-ba12a834-4c74-450c-beed-8236c140a94d.png)
+
+
