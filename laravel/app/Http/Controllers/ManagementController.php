@@ -146,35 +146,8 @@ class ManagementController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Management  $management
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Management $management)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Management  $management
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Management $management)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Management  $management
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy(Management $management)
     {
         $management->delete();
