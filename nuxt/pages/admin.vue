@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="managements">
-      <h2>未承認の店舗代表者登録</h2>
+      <h2>未承認の店舗代表者申請</h2>
       <div class="management" v-for="management in managements" :key="management.id">
         <table class="management__table">
           <tr>
@@ -57,7 +57,7 @@
           <button class="approve-button" @click="approve(management)">承認する</button>
         </div>
       </div>
-      <h2>承認済みの店舗代表者登録</h2>
+      <h2>承認済みの店舗代表者</h2>
       <div class="approved management" v-for="management in approved" :key="management.id">
         <table class="management__table">
           <tr>

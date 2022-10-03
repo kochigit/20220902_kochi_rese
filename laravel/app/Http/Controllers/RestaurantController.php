@@ -124,16 +124,6 @@ class RestaurantController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Restaurant  $restaurant
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Restaurant $restaurant)
-    {
-        //
-    }
 
     public function search(Request $request) 
     {

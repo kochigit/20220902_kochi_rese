@@ -35,19 +35,24 @@
     <transition name="fade">
       <div class="edit-restaurant-modal" v-if="isShow" @click.self="toggleEdit">
         <div class="edit-restaurant-img">
-          <input type="file" @change="imageSelected" class="update-img">
-          <div class="flex--sb edit-img">
-            <img :src="restaurant.img_path" class="previous-img" />
-            <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
-            <transition name="fade-in">
-              <div v-if="url" class="preview">
-                <img :src="url">
-              </div>
-            </transition>
-              <div v-if="!url" class="no-preview">
-              </div>
-          </div>
-          <button @click="imageUpload" class="upload-button" :disabled="!image">画像を変更する</button>
+          <validation-observer ref="obs" v-slot="ObserverProps">
+            <validation-provider rules="required|image" ref="provider" v-slot="{ errors }" name="画像">
+              <input type="file" @change="imageSelected" class="update-img">
+              <p class="error--lightcoral" v-show="errors[0]">{{errors[0]}}</p>
+            </validation-provider>
+            <div class="flex--sb edit-img">
+              <img :src="restaurant.img_path" class="previous-img" />
+              <img src="~assets/img/chevron-triple-right.svg" class="right-arrow" />
+              <transition name="fade-in">
+                <div v-if="url" class="preview">
+                  <img :src="url">
+                </div>
+              </transition>
+                <div v-if="!url" class="no-preview">
+                </div>
+            </div>
+            <button @click="imageUpload" class="upload-button" :disabled="!image || ObserverProps.invalid || !ObserverProps.validated">画像を変更する</button>
+          </validation-observer>
         </div>
         <div class="edit-restaurant-info">
           <table>
@@ -249,6 +254,7 @@
         this.isShow = !this.isShow;
       },
       imageSelected(event) {
+        this.$refs.provider.validate(event)
         if (event.target.files[0]) {
           this.image = event.target.files[0];
         }
@@ -314,7 +320,7 @@
             alert('カメラが見つかりません');
           } else if (error.name === 'NotSupportedError') {
             // page is not served over HTTPS (or localhost)
-            alert('この機能はlocalhostかHTTPSでしか利用できません。\nこの模擬案件でHTTPSは用意できませんので、local環境で機能の評価を行って頂ければ幸いです。');
+            alert('この機能はlocalhostかHTTPSでしか利用できません。\nこの模擬案件のAWS環境ではHTTPSは用意できませんので、local環境で機能の評価を行って頂ければ幸いです。');
           } else if (error.name === 'NotReadableError') {
             // maybe camera is already in use
             alert('おそらくカメラが他のアプリで使用中です');
@@ -323,10 +329,11 @@
             alert('指定したカメラが見つかりません');
           } else {
             // browser is probably lacking features (WebRTC, Canvas)
-            alert('ご利用のブラウザ環境ではこの機能はご利用できません。')
+            alert('ご利用のブラウザ環境ではこの機能はご利用できません。\nこの機能はlocalhostかHTTPSでしか利用できません。\nこの模擬案件のAWS環境ではHTTPSは用意できませんので、local環境で機能の評価を行って頂ければ幸いです。')
           }
         } finally {
           // hide loading indicator
+          this.qrReservation = null;
         }
       },
       onDecode(qrData){
@@ -475,6 +482,8 @@
 }
 .previous-img {
   width: 40%;
+  max-height: 300px;
+  object-fit: contain;
 }
 .update-img {
   font-size: 14px;
@@ -710,6 +719,7 @@
 }
 .content.checkbox span {
   display: flex;
+  flex-wrap: wrap;
 }
 .content.checkbox label {
   margin-right: 16px;
@@ -737,6 +747,7 @@ input.input-img {
   color: lightcoral;
   font-size: 14px;
   margin-top: 2px;
+  text-align: right;
 }
 
 @media screen and (max-width: 768px) { 

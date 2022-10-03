@@ -29,12 +29,12 @@ Route::group([
 
 
 Route::group(['prefix' => 'v1'], function() {
-    Route::apiResource('restaurant', RestaurantController::class);
+    Route::apiResource('restaurant', RestaurantController::class)->only(['index','store','show','update']);
     Route::post('search-restaurant', [RestaurantController::class, 'search']);
     Route::post('restaurant-img', [RestaurantController::class, 'updateImage']);
-    Route::apiResource('user', UserController::class);
+    Route::apiResource('user', UserController::class)->only(['store','show']);
     Route::apiResource('favorite', FavoriteController::class)->only(['store','destroy']);
-    Route::apiResource('reservation', ReservationController::class)->only(['store', 'update','destroy']);
+    Route::apiResource('reservation', ReservationController::class)->only(['store','update','destroy']);
     Route::apiResource('evaluation', EvaluationController::class)->only('store');
     
     Route::group([

@@ -1,6 +1,6 @@
 <template>
   <div class="mypage" v-if="reservations || favorites">
-    <transition name="fade"> 
+    <transition name="fade">
       <div class="edit-modal" v-if="isShow" @click.self="toggleEdit">
         <validation-observer ref="obs" v-slot="ObserverProps" class="edit-validation">
           <table class="my-reservation__table edit-table">
@@ -67,7 +67,8 @@
               </td>
             </tr>
           </table>
-          <button class="reserve-button update-button" @click="updateReservation" :disabled="ObserverProps.invalid || manualDisabler">
+          <button class="reserve-button update-button" @click="updateReservation"
+            :disabled="ObserverProps.invalid || manualDisabler">
             予約を変更する
           </button>
         </validation-observer>
@@ -122,7 +123,7 @@
             QRコード表示切り替え
           </button>
           <div class="qrcode" v-show="qrActive">
-            <qrcode :value="rsv|toJSON" :options="{width: 180}"/>
+            <qrcode :value="rsv|toJSON" :options="{width: 180}" />
           </div>
         </table>
         <p v-if="!reservations[0]">予約はありません。</p>
@@ -186,7 +187,8 @@
                   <textarea v-model="comment" id="comment" name="コメント" class="comment" rows="5"></textarea>
                   <p class="error--orange">{{errors[0]}}</p>
                 </validation-provider>
-                <button @click="evaluate(rsv)" class="evaluate-button" :disabled="ObserverProps.invalid || !ObserverProps.validated">投稿</button>
+                <button @click="evaluate(rsv)" class="evaluate-button"
+                  :disabled="ObserverProps.invalid || !ObserverProps.validated">投稿</button>
               </validation-observer>
             </div>
           </div>
@@ -264,8 +266,10 @@
     methods: {
       async getUserWithReservationsAndFavorites() {
         const gotData = await this.$axios.get(`/v1/user/${this.uuid}`);
-        this.reservations = gotData.data.user.reservations.filter(rsv => rsv.visited_at == null).sort((a, b) => (a.date < b.date) ? -1 : 1);
-        this.visitedReservations = gotData.data.user.reservations.filter(rsv => rsv.visited_at !== null).sort((a, b) => (a.date > b.date) ? -1 : 1);
+        this.reservations = gotData.data.user.reservations.filter(rsv => rsv.visited_at == null).sort((a, b) => (a
+          .date < b.date) ? -1 : 1);
+        this.visitedReservations = gotData.data.user.reservations.filter(rsv => rsv.visited_at !== null).sort((a,
+          b) => (a.date > b.date) ? -1 : 1);
         this.favorites = gotData.data.user.favorites.reverse();
       },
       async cancel(num, id) {
@@ -308,7 +312,7 @@
       },
       async updateReservation() {
         const boo = confirm(`予約を変更してもよろしいですか？`);
-        if (boo==false) {
+        if (boo == false) {
           return;
         }
         let rsvData = {};
@@ -427,7 +431,9 @@
     margin-right: 17px;
   }
 
-  .edit--hover, .cancel--hover, .comment--hover {
+  .edit--hover,
+  .cancel--hover,
+  .comment--hover {
     font-size: 12px;
     border: white 1px dashed;
     position: absolute;
@@ -442,23 +448,30 @@
     opacity: 1;
     transition: 0.3s;
   }
+
   .cancel {
     width: 26px;
   }
-  .cancel--hover, .comment--hover {
+
+  .cancel--hover,
+  .comment--hover {
     border-radius: 10px 0 10px 10px;
     transform: translate(-127px, 32px);
   }
+
   .cancel:hover+.cancel--hover {
     opacity: 1;
     transition: 0.3s;
   }
+
   .comment-img {
     width: 32px;
   }
+
   .comment--hover {
     transform: translate(-120px, 26px);
   }
+
   .comment-img:hover+.comment--hover {
     opacity: 1;
   }
@@ -537,13 +550,17 @@
     box-shadow: 0 0 8px white;
   }
 
+  .edit-validation .my-reservation__table {
+    margin-top: 0;
+  }
+
   .fade-enter-active,
   .fade-leave-active {
     transition: opacity 0.7s;
   }
 
   .fade-enter,
-  .fade-leave-to{
+  .fade-leave-to {
     opacity: 0;
   }
 
@@ -551,241 +568,285 @@
     background: #5c6394;
   }
 
-.evaluate-box {
-  margin-top: 30px;
-}
-.grade {
-  display: flex;
-  flex-flow: row-reverse;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 15px;
-}
-.grade input[type=radio] {
-  display: none;
-}
-.grade label {
-  font-size: 26px;
-}
-.grade label:first-of-type {
-  margin-right: 3vw;
-}
-.grade label:hover {
-  color: #ffcc00;
-}
-.grade label:hover ~ label {
-  color: #ffcc00;
-}
-.grade input[type=radio]:checked ~ label {
-  color: #ffcc00;
-}
-.grade p {
-  margin-right: 4vw;
-}
-
-.comment-label {
-  display: block;
-  margin-bottom: 7px;
-}
-.comment {
-  width: 100%;
-  resize: none;
-  border-radius: 5px;
-  border: none;
-}
-.evaluate-button {
-  background: #344cff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 7px 18px;
-  font-size: 12px;
-  display: block;
-  margin: 10px 0 0 auto;
-  box-shadow: 1px 1px 3px gray;
-}
-
-.graded {
-  margin-bottom: 15px;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-}
-.graded p {
-  margin-right: 3vw;
-}
-.graded span {
-  font-size: 26px;
-}
-.graded span:last-of-type {
-  margin-right: 4vw;
-}
-.star--yellow {
-  color: #ffcc00;
-}
-
-.is-email-verified {
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-}
-.is-email-verified button {
-  background: #344cff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 7px 18px;
-  font-size: 12px;
-  box-shadow: 1px 1px 3px gray;
-}
-.mypage__welcome-wrap{
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-.verified {
-  color: lightseagreen;
-  font-size: 12px;
-  border: lightseagreen 1px solid;
-  padding: 3px 6px;
-  border-radius: 10px;
-}
-.unverified {
-  font-weight: bold;
-}
-.qrcode {
-  text-align: center;
-}
-.visited-img {
-  width: 26px;
-}
-h3.visited {
-  line-height: 23px;
-  font-weight: normal;
-}
-.my-any__title.visited {
-  margin-top: 60px;
-}
-.activate-qr {
-  display: block;
-  margin: 20px auto;
-  border: gainsboro 1px solid;
-  border-radius: 5px;
-  padding: 5px 10px;
-  background: lightseagreen;
-  color: inherit;
-  box-shadow: 0 0 4px lightgray;
-}
-.card-info {
-  padding: 20px;
-}
-
-.card-img {
-  width: 100%;
-  height: 13vw;
-  object-fit: cover;
-  border-radius: 5px 5px 0 0;
-}
-
-.card-name {
-  font-size: 18px;
-  padding-bottom: 10px;
-}
-
-.card-tag {
-  display: inline-block;
-  font-size: 13px;
-  padding-bottom: 15px;
-}
-
-.todetail-and-favorite {
-  display: flex;
-  justify-content: space-between;
-}
-
-.to-detail {
-  background: #3c53ff;
-  color: white;
-  border-radius: 5px;
-  padding: 6px 10%;
-  font-size: 14px;
-  box-shadow: 1px 1px 3px gray;
-}
-
-@media screen and (max-width: 768px) { 
-  .myreservation-and-myfavorite {
-    flex-wrap: wrap;
-  }
-  .my-reservation {
-    width: 100%;
-    margin-bottom: 40px;
-  }
-  .my-favorite {
-    width: 100%;
-  }
-  .my-any__title {
-    margin-bottom: 15px;
-  }
-  .my-any__title.visited {
+  .evaluate-box {
     margin-top: 30px;
   }
-  .my-reservation__table {
-    margin-top: 15px;
-    padding: 15px 20px;
-    font-size: 15px;
+
+  .grade {
+    display: flex;
+    flex-flow: row-reverse;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 15px;
   }
-  .table__top {
-    margin-bottom: 5px;
-  }
-  .mypage__welcome-wrap{
-    margin-top: 0;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-  .mypage__welcome {
-    margin-bottom: 10px;
-    font-size: 16px;
-    width: 100%;
-  }
-  .activate-qr {
-    margin: 5px auto;
-  }
-  .my-reservation__table.edit-table {
-    padding: 10px 15px;
-  }
-  .my-reservation__table.edit-table th{
+
+  .grade input[type=radio] {
     display: none;
   }
-  .my-reservation__table.edit-table td {
-    padding-left: 0;
+
+  .grade label {
+    font-size: 26px;
   }
-  .right-arrow {
-    width: 16px;
-    margin: 0 5px;
+
+  .grade label:first-of-type {
+    margin-right: 3vw;
   }
-  p.error--orange {
-    width: 40vw;
+
+  .grade label:hover {
+    color: #ffcc00;
   }
-  .restaurant-card {
-    width: 48%;
-    margin-bottom: 10px;
+
+  .grade label:hover~label {
+    color: #ffcc00;
   }
-  .card-img {
-    height: 25vw;
+
+  .grade input[type=radio]:checked~label {
+    color: #ffcc00;
   }
-  .card-info {
-    padding: 10px;
+
+  .grade p {
+    margin-right: 4vw;
   }
-  .card-name {
-    font-size: 16px;
-    padding-bottom: 5px;
+
+  .comment-label {
+    display: block;
+    margin-bottom: 7px;
   }
-  .card-tag {
+
+  .comment {
+    width: 100%;
+    resize: none;
+    border-radius: 5px;
+    border: none;
+  }
+
+  .evaluate-button {
+    background: #344cff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 18px;
     font-size: 12px;
-    padding-bottom: 5px;
+    display: block;
+    margin: 10px 0 0 auto;
+    box-shadow: 1px 1px 3px gray;
   }
-}
+
+  .graded {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  .graded p {
+    margin-right: 3vw;
+  }
+
+  .graded span {
+    font-size: 26px;
+  }
+
+  .graded span:last-of-type {
+    margin-right: 4vw;
+  }
+
+  .star--yellow {
+    color: #ffcc00;
+  }
+
+  .is-email-verified {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+  }
+
+  .is-email-verified button {
+    background: #344cff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 18px;
+    font-size: 12px;
+    box-shadow: 1px 1px 3px gray;
+  }
+
+  .mypage__welcome-wrap {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .verified {
+    color: lightseagreen;
+    font-size: 12px;
+    border: lightseagreen 1px solid;
+    padding: 3px 6px;
+    border-radius: 10px;
+  }
+
+  .unverified {
+    font-weight: bold;
+  }
+
+  .qrcode {
+    text-align: center;
+  }
+
+  .visited-img {
+    width: 26px;
+  }
+
+  h3.visited {
+    line-height: 23px;
+    font-weight: normal;
+  }
+
+  .my-any__title.visited {
+    margin-top: 60px;
+  }
+
+  .activate-qr {
+    display: block;
+    margin: 20px auto;
+    border: gainsboro 1px solid;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background: lightseagreen;
+    color: inherit;
+    box-shadow: 0 0 4px lightgray;
+  }
+
+  .card-info {
+    padding: 20px;
+  }
+
+  .card-img {
+    width: 100%;
+    height: 13vw;
+    object-fit: cover;
+    border-radius: 5px 5px 0 0;
+  }
+
+  .card-name {
+    font-size: 18px;
+    padding-bottom: 10px;
+  }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 13px;
+    padding-bottom: 15px;
+  }
+
+  .todetail-and-favorite {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .to-detail {
+    background: #3c53ff;
+    color: white;
+    border-radius: 5px;
+    padding: 6px 10%;
+    font-size: 14px;
+    box-shadow: 1px 1px 3px gray;
+  }
+
+  @media screen and (max-width: 768px) {
+    .myreservation-and-myfavorite {
+      flex-wrap: wrap;
+    }
+
+    .my-reservation {
+      width: 100%;
+      margin-bottom: 40px;
+    }
+
+    .my-favorite {
+      width: 100%;
+    }
+
+    .my-any__title {
+      margin-bottom: 15px;
+    }
+
+    .my-any__title.visited {
+      margin-top: 30px;
+    }
+
+    .my-reservation__table {
+      margin-top: 15px;
+      padding: 15px 20px;
+      font-size: 15px;
+    }
+
+    .table__top {
+      margin-bottom: 5px;
+    }
+
+    .mypage__welcome-wrap {
+      margin-top: 0;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .mypage__welcome {
+      margin-bottom: 10px;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    .activate-qr {
+      margin: 5px auto;
+    }
+
+    .my-reservation__table.edit-table {
+      padding: 10px 15px;
+    }
+
+    .my-reservation__table.edit-table th {
+      display: none;
+    }
+
+    .my-reservation__table.edit-table td {
+      padding-left: 0;
+    }
+
+    .right-arrow {
+      width: 16px;
+      margin: 0 5px;
+    }
+
+    p.error--orange {
+      width: 40vw;
+    }
+
+    .restaurant-card {
+      width: 48%;
+      margin-bottom: 10px;
+    }
+
+    .card-img {
+      height: 25vw;
+    }
+
+    .card-info {
+      padding: 10px;
+    }
+
+    .card-name {
+      font-size: 16px;
+      padding-bottom: 5px;
+    }
+
+    .card-tag {
+      font-size: 12px;
+      padding-bottom: 5px;
+    }
+  }
+
 </style>

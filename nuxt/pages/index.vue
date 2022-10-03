@@ -1,6 +1,6 @@
 <template>
   <div v-if="restaurants" class="restaurants">
-    
+
     <div class="search-bar pointer" @change="search">
       <select v-model="area" class="select">
         <option value="" class="option">All area</option>
@@ -30,14 +30,14 @@
           <span class="card-tag">#{{ restaurant.genre }}</span>
           <div class="todetail-and-favorite">
             <NuxtLink :to="'/detail/' + restaurant.uuid" class="to-detail">詳しく見る</NuxtLink>
-            <img src="~assets/img/iconmonstr-favorite-3.svg" class="favorite"
-              @click="unlike(restaurant)" v-if="$auth.loggedIn? restaurant.favorites.some((fav) => fav.user_uuid === $auth.user.uuid): false" />
+            <img src="~assets/img/iconmonstr-favorite-3.svg" class="favorite" @click="unlike(restaurant)"
+              v-if="$auth.loggedIn? restaurant.favorites.some((fav) => fav.user_uuid === $auth.user.uuid): false" />
             <img src="~assets/img/iconmonstr-favorite-9.svg" class="favorite" @click="like(restaurant)" v-else />
           </div>
         </div>
       </div>
     </transition-group>
-    
+
     <p v-if="restaurants==''">お探しの飲食店はありませんでした。</p>
 
   </div>
@@ -142,6 +142,7 @@
     border-radius: 5px;
     padding: 6px 0px;
   }
+
   .search-bar * {
     border: none;
     font-weight: bold;
@@ -150,6 +151,7 @@
     cursor: pointer;
     outline: none;
   }
+
   .select {
     border-right: gainsboro 1px solid;
     width: 10vw;
@@ -160,6 +162,7 @@
     /* appearance: none; */
     /* background: url('~assets/img/iconmonstr-arrow-33.svg'); */
   }
+
   .search__input {
     width: 19vw;
   }
@@ -170,6 +173,7 @@
     width: 24%;
     order: 1;
   }
+
   .restaurant-card-wrap::after {
     content: '';
     display: block;
@@ -226,65 +230,76 @@
     box-shadow: 1px 1px 3px gray;
   }
 
-.card-enter-active, .card-move {
-  transition: opacity 1s, transform 1s;
-}
-.card-leave-active {
-  position: absolute;
-  opacity: 0.3;
-  transition: opacity 1s transform 1s;
-  right: -30%;
-  bottom: -30%;
-}
-.card-enter {
-  opacity: 0;
-  transform: translateY(-35px);
-}
-.card-leave-to {
-  opacity: 0;
-}
+  .card-enter-active,
+  .card-move {
+    transition: opacity 1s, transform 1s;
+  }
 
-.clear {
-  position: absolute;
-  right: 10px;
-}
-.magnifier {
-  width: 18px;
-  vertical-align: middle;
-  transform: translateY(-1px);
-  margin-left: 0.5vw;
-}
+  .card-leave-active {
+    position: absolute;
+    opacity: 0.3;
+    transition: opacity 1s transform 1s;
+    right: -30%;
+    bottom: -30%;
+  }
+
+  .card-enter {
+    opacity: 0;
+    transform: translateY(-35px);
+  }
+
+  .card-leave-to {
+    opacity: 0;
+  }
+
+  .clear {
+    position: absolute;
+    right: 10px;
+  }
+
+  .magnifier {
+    width: 18px;
+    vertical-align: middle;
+    transform: translateY(-1px);
+    margin-left: 0.5vw;
+  }
 
 
-@media screen and (max-width: 768px) { 
-  .restaurant-card {
-    width: 48%;
-    margin-bottom: 10px;
+  @media screen and (max-width: 768px) {
+    .restaurant-card {
+      width: 48%;
+      margin-bottom: 10px;
+    }
+
+    .card-img {
+      height: 25vw;
+    }
+
+    .card-info {
+      padding: 10px;
+    }
+
+    .card-name {
+      font-size: 16px;
+      padding-bottom: 5px;
+    }
+
+    .card-tag {
+      font-size: 12px;
+      padding-bottom: 5px;
+    }
+
+    .search-bar {
+      position: relative;
+      top: 0;
+      right: 0;
+      background: white;
+      box-shadow: 2px 2px 4px rgb(163, 163, 163);
+      border-radius: 5px;
+      padding: 6px 0px;
+      margin-bottom: 20px;
+      margin-top: 10px;
+    }
   }
-  .card-img {
-    height: 25vw;
-  }
-  .card-info {
-    padding: 10px;
-  }
-  .card-name {
-    font-size: 16px;
-    padding-bottom: 5px;
-  }
-  .card-tag {
-    font-size: 12px;
-    padding-bottom: 5px;
-  }
-  .search-bar {
-    position: relative;
-    top: 0;
-    right:0;
-    background: white;
-    box-shadow: 2px 2px 4px rgb(163, 163, 163);
-    border-radius: 5px;
-    padding: 6px 0px;
-    margin-bottom: 20px;
-    margin-top: 10px;
-  }
-}
+
 </style>

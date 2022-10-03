@@ -20,7 +20,7 @@ class CreateRestaurantsTable extends Migration
             $table->string('area');
             $table->string('genre');
             $table->text('description');
-            $table->string('img_path');
+            $table->text('img_path');
             $table->timestamps();
         });
     }
