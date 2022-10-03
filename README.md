@@ -71,7 +71,7 @@
 - 環境によって主に変わるのは、URL、database、mail系です。
 - メールはlocalではMailtrap、dockerではMailhog、本番ではgmailを利用しています。
 - docker環境を構築する際は、git cloneした後に、laravelディレクトリでComposer install --ignore-platform-reqs、nuxtディレクトリでyarn installしてからdocker-compose up --buildすると上手くいきます。（正直仮想コンテナ内でやるべきことなのになぜかbuild,up時に実行されない。localにcomposerやyarnがない人やバージョンが合わない人のためのdockerなのに。これが私の現状のdockerのウデマエです。。今後はDockerfileをいじくりまわしてコンテナ内でできるようにしていきたい。）
-
+- dockerはWindowsのファイルシステムで動かすととても重いので、windowsの場合はWSL2環境にUbuntuを入れ、そこにgit cloneするとよいと思います。私の環境はUbuntu 20.04です。Macの場合は分かりませんがUNIX系なので大丈夫なのではと予想しています。
 
 
 ## テーブル設計
