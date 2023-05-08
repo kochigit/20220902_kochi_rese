@@ -70,12 +70,16 @@
 - laravel,nuxtそれぞれに.envがあります。nuxtには.envを扱えるモジュールを入れています。
 - 環境によって主に変わるのは、URL、database、mail系です。
 - メールはlocalではMailtrap、dockerではMailhog、本番ではgmailを利用しています。
-- docker環境を構築する際は、git cloneした後に、laravelディレクトリでComposer install --ignore-platform-reqs、nuxtディレクトリでyarn installしてからdocker-compose up --buildすると上手くいきます。（正直仮想コンテナ内でやるべきことなのになぜかbuild,up時に実行されない。localにcomposerやyarnがない人やバージョンが合わない人のためのdockerなのに。これが私の現状のdockerのウデマエです。。今後はDockerfileをいじくりまわしてコンテナ内でできるようにしていきたい。）
+- docker環境を構築する際は、git cloneした後に、laravelディレクトリでComposer install --ignore-platform-reqs、nuxtディレクトリでyarn installしてからdocker-compose up --buildすると上手くいきます。
 - dockerはWindowsのファイルシステムで動かすととても重いので、windowsの場合はWSL2環境にUbuntuを入れ、そこにgit cloneするとよいと思います。私の環境はUbuntu 20.04です。Macの場合は分かりませんがUNIX系なので大丈夫なのではと予想しています。
 
 
 ## テーブル設計
-- テーブルが多く冗長になるので、別途スプレッドシートの「テーブル仕様書」をご確認ください。
+![image](https://user-images.githubusercontent.com/104754786/236842188-470bb6cc-baac-4d1b-b146-bf45814cbe02.png)
+![image](https://user-images.githubusercontent.com/104754786/236842258-95c6e5fc-eabb-45e9-b408-e6205e534a38.png)
+![image](https://user-images.githubusercontent.com/104754786/236842296-3da371c2-06b0-4e38-b78c-d0eb5d111b28.png)
+
+
 
 ## ER図
 ![ER drawio](https://user-images.githubusercontent.com/104754786/193504507-24e09937-110d-4ffe-b5a3-5daa8960e9fc.png)
