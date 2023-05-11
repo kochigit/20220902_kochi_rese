@@ -1,6 +1,8 @@
 ## アプリ挙動の動画
 
-コストの関係でAWS本番環境を撤廃しましたが、このWebアプリポートフォリオの動作は[**こちらのリンク**](https://drive.google.com/drive/folders/18remhbEYRzhlUEtAxz7NKFEAp2g5DNeq?usp=sharing)から動画をダウンロードしてご覧になれます。
+コストの関係でAWS本番環境を撤廃しましたが、このWebアプリポートフォリオの動作は以下のリンクから動画をダウンロードしてご覧になれます。
+
+[**動画ファイルはこちら**](https://drive.google.com/drive/folders/18remhbEYRzhlUEtAxz7NKFEAp2g5DNeq?usp=sharing)
 
 是非ご覧くださいませ。（予約日のリマインダーメール機能など、一部AWSでの本番環境でしか機能していないものは動画化できていません。）
 
