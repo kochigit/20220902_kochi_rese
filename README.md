@@ -1,3 +1,10 @@
+## アプリ挙動の動画
+
+コストの関係でAWS本番環境を撤廃しましたが、このWebアプリポートフォリオの動作は[**こちらのリンク**](https://drive.google.com/drive/folders/18remhbEYRzhlUEtAxz7NKFEAp2g5DNeq?usp=sharing)から動画をダウンロードしてご覧になれます。
+
+是非ご覧くださいませ。（予約日のリマインダーメール機能など、一部AWSでの本番環境でしか機能していないものは動画化できていません。）
+
+
 # 飲食店予約アプリ Rese（リーズ）
 - お客様（ユーザー）が飲食店の検索、お気に入り、予約、予約変更、口コミなどをすることができる。
 - 管理者（Administrator、seed時に作成）はManager（店舗代表者）の作成、management（店舗代表者登録申請）の承認、承認取り消し、削除ができる。
@@ -85,7 +92,7 @@
 ![ER drawio](https://user-images.githubusercontent.com/104754786/193504507-24e09937-110d-4ffe-b5a3-5daa8960e9fc.png)
 
 
-## 他に記載することがあれば記述する
+## 機能チェックの手順はこちら
 #### 管理者（Administrator）
 - 管理者アカウントはname:Administrator、email:administrator@admin.admin、password:administratorでシードされていますので、そちらでログインください。
 - adminページには左上のハンバーガーをクリックして出てくるメニューのAdminをクリックしてください。
