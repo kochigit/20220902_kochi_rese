@@ -70,7 +70,7 @@
 - Laravelデプロイ先：AWS EC2
 - Nuxtデプロイ先：AWS EC2（NuxtはHerokuで良いかなと思ったが、HerokuのNuxtからはHTTPのAPIを叩けなかったため、NuxtもEC2にデプロイ。）
 - MySQLデプロイ先：AWS RDS
-- ストレージ：AWS S3 （後述：最後までお読みいただけますでしょうか）
+- ストレージ：AWS S3
 - メールサーバー：gmail
 
 ## .envファイルによる環境切り分け
